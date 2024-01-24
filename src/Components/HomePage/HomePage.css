@@ -1,0 +1,17 @@
+h1 {
+    font-family: 'Square Peg';
+    font-size: '250px';
+    font-weight: bold;
+}
+
+.home-page {
+    margin-top: '2px';
+}
+
+p {
+    font-family: 'Permanent Marker';
+}
+
+button {
+    margin-top: '1rem';
+}

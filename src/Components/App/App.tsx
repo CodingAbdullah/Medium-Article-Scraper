@@ -5,6 +5,7 @@ import Navbar from '../Navbar/Navbar';
 import HomePage from '../HomePage/HomePage';
 import MediaFilesPage from '../MediaFilesPage/MediaFilesPage';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import Footer from '../Footer/Footer';
 
 const App: FC = () => {
   return (
@@ -17,6 +18,7 @@ const App: FC = () => {
           <Route path="/medium-dot-com-files" element={<MediaFilesPage />}></Route>
         </Routes>
      </Router>
+     <Footer />
     </div>
   );
 }
