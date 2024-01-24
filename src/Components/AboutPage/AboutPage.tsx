@@ -7,12 +7,12 @@ const AboutPage: FC = () => {
             <h1>About</h1>
             <div className='container' style={{ marginTop: '2rem' }}>
                 <p>
-                    Medium.com provides a built-in audio listener which translates text-to-speech the article you are reading.
+                    Medium.com provides a built-in audio listener which translates text-to-speech of the article you are reading.
                     However, it does not provide any mechanism for downloading the article as an audible nor does it provide the ability to read a plain text file. 
                     <br />
                 </p>
                 <p style={{ marginTop: '1rem', paddingBottom: '1rem' }}>
-                    This app hopes to bridge that gap by allowing the user to seamlessly enter an article link and thereby, have an audio file and/or a text file readily available at your disposal.
+                    This app hopes to bridge that gap by allowing the user to seamlessly enter an article link and thereby, have an audio file and/or a text file readily available at their disposal.
                 </p>
             </div>
             <hr style={{ width: '50%', marginLeft: 'auto', marginRight: 'auto' }} />
