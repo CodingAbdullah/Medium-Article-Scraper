@@ -1,0 +1,8 @@
+label, button {
+    font-family: 'Permanent Marker';
+}
+
+form {
+    padding: '5rem';
+    background-color: lightgray;
+}
