@@ -2,19 +2,20 @@ import { FC, FormEvent, useState } from 'react';
 import axios from 'axios';
 import '../MediaFilesPage/MediaFilesPage.css';
 import Alert from '../Alert/Alert';
+import FilePanel from '../FilePanel/FilePanel';
 
 const MediaFilesPage: FC = () => {
-    const [textToggle, updateTextToggle] = useState(true); // By default, a text file is always created    
     const [audioToggle, updateAudioToggle] = useState(false); // By default, no audio file is created
 
     const [audioFileVoice, updateAudioFileVoice] = useState('alloy'); // Default voice option, if requested
     const [mediumArticleLink, updateMediumArticleLink] = useState(''); // Initiate an empty link to begin
 
+    // State for working with response data
     const [alert, updateAlert] = useState('');
+    const [files, updateFiles] = useState(null);
 
     const mediumArticleFormHandler = (e: FormEvent) => {
         e.preventDefault(); // Prevent premature page refresh
-        // Handler to go here with state to determine what panel should be made available containing data
         
         // Perform a basic check of the Medium article link
         if (mediumArticleLink.includes('medium.com')) {
@@ -22,10 +23,10 @@ const MediaFilesPage: FC = () => {
             let options = {
                 method: 'POST',
                 body: JSON.stringify({ 
-                    audioFileOption: audioToggle, 
-                    textFileOption: textToggle, 
                     articleLink: mediumArticleLink,
-                    audioFileVoiceOption: audioFileVoice
+                    audioFileOption: audioToggle,
+                    audioFileVoiceOption: audioFileVoice,
+                    textFileOption: true, // Always true as it is always checked
                 }),
                 headers : {
                     'content-type' : 'application/json'
@@ -35,8 +36,9 @@ const MediaFilesPage: FC = () => {
             // Once the options are set, make call to the back-end to fetch files
             axios.post('http://localhost:5000/parse-file', options)
             .then((response: any) => {
-                // More to be added here later..
+                // Update Alert notification and Update File state to contain URLs of text/audio files
                 updateAlert('valid-medium-url');
+                updateFiles(response.data.uploadURL);
             })
             .catch((err: any) => {
                 updateAlert('invalid-medium-url');
@@ -46,14 +48,8 @@ const MediaFilesPage: FC = () => {
             updateAlert('invald-medium-url');
         }
     }
-    
-    // Invert the text file option state upon every selection
-    const textFileSelector = (e: FormEvent<HTMLInputElement>) => {
-        let textToggleState = !textToggle;
-        updateTextToggle(textToggleState);
-    }
-    
-    // Invert the audio file option state upon every selection
+
+    // Invert the Audio File Option state upon selection
     const audioFileSelector = (e: FormEvent<HTMLInputElement>) => {
         let audioToggleState = !audioToggle;
         updateAudioToggle(audioToggleState);
@@ -71,9 +67,9 @@ const MediaFilesPage: FC = () => {
             </div>
             <form onSubmit={ mediumArticleFormHandler } style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }}>
                 <label style={{ marginTop: '0.5rem' }} className="form-label">Medium Article URL</label>
-                <input style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }} onChange={ e => updateMediumArticleLink(e.target.value) } type="text" className="form-control" />
+                <input style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }} onChange={ e => updateMediumArticleLink(e.target.value) } type="text" className="form-control" required />
                 <div style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }} className="form-check">
-                    <input className="form-check-input" type="checkbox" onChange={ textFileSelector } value="text" checked />
+                    <input className="form-check-input" type="checkbox" value="text" checked />
                     <label className="form-check-label">
                         Text File (By Default)
                     </label>
@@ -141,6 +137,7 @@ const MediaFilesPage: FC = () => {
                 }
                 <button style={{ fontFamily: 'Permanent Marker', marginTop: '1rem', marginBottom: '1rem' }} type="submit" className="btn btn-success">Submit</button>
             </form>
+            { alert === 'valid-medium-url' && files !== null ? <FilePanel files={ files } /> : null }
         </div>
     )
 }
