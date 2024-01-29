@@ -20,9 +20,12 @@ export const createFileController = async (req: Request, res: Response) => {
       let textFileUploadStatus = await uploadTextFile(punctuationInsertedText);
       let audioFileUploadStatus = await uploadTTSFile(punctuationInsertedText, audioFileVoiceOption);
 
-      if (textFileUploadStatus && audioFileUploadStatus) {
+      if (textFileUploadStatus[0] && audioFileUploadStatus[0]) {
         res.status(201).json({
-          message: "Successfully created both text and audio file"
+          uploadURL: [
+            "https://" + process.env.AWS_BUCKET_NAME + '.s3-' + process.env.AWS_REGION + '.amazonaws.com/' + textFileUploadStatus[1] + '.txt',
+            "https://" + process.env.AWS_BUCKET_NAME + '.s3-' + process.env.AWS_REGION + '.amazonaws.com/' + textFileUploadStatus[1] + '.mp3'
+          ]
         });
       }
       else {
@@ -34,10 +37,9 @@ export const createFileController = async (req: Request, res: Response) => {
     // By default, the text file is always created
     else {
       let textFileUploadStatus = await uploadTextFile(punctuationInsertedText);
-
-      if (textFileUploadStatus) {
+      if (textFileUploadStatus[0]) {
         res.status(201).json({
-          message: "Text file is available for you to download"
+          uploadURL: ["https://" + process.env.AWS_BUCKET_NAME + '.s3-' + process.env.AWS_REGION + '.amazonaws.com/' + textFileUploadStatus[1] + '.txt']
         });
       }
       else {

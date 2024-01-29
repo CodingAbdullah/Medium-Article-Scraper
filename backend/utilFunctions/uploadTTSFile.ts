@@ -17,7 +17,7 @@ let S3 = new S3Client([{
 }]);
 
 // Generate audio stream from text and then upload it as an .mp3 file to AWS S3
-export async function uploadTTSFile(documentText: string, voiceType: VoiceDataType): Promise<boolean> {    
+export async function uploadTTSFile(documentText: string, voiceType: VoiceDataType): Promise<any[]> {    
     try {
         let audioFileID = uuid.v4(); // Generate random ID
         let conversion = await client.audio.speech.create({ 
@@ -37,10 +37,10 @@ export async function uploadTTSFile(documentText: string, voiceType: VoiceDataTy
         }));
 
         // If conversion to audio and uploading file to S3 bucket succeed, return true 
-        return true;
+        return [true, audioFileID];
     }
     catch (err) {
         // If either conversion to audio or uploading fil to S3 bucket do not succeed, return false
-        return false;
+        return [false];
     }
 }

@@ -11,7 +11,7 @@ let S3 = new S3Client([{
  }]);
 
 // After having filtered all text from HTML document, generate a text file
-export async function uploadTextFile(documentText: string): Promise<boolean> {
+export async function uploadTextFile(documentText: string): Promise<any[]> {
     
     // Assign Bucket name where file is to be uploaded
     // Assign Key using the help of the UUID library
@@ -25,10 +25,10 @@ export async function uploadTextFile(documentText: string): Promise<boolean> {
         }));
 
         // If successful, return true
-        return true;
+        return [true, textFileID];
     }
     catch(err) {
         // If not successful, return false
-        return false;
+        return [false];
     }
 }
