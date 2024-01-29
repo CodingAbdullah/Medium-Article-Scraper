@@ -1,0 +1,7 @@
+# Adding node_modules directory, Dockerfile, .env file, and .git
+# Reduce the size of the container and install dependencies when building the actual image
+
+Dockerfile
+node_modules
+.env
+.git
