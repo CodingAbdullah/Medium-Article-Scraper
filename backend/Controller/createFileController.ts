@@ -3,9 +3,12 @@ import generateArticleText from "../utilFunctions/generateArticleText";
 import insertPunctuation from "../utilFunctions/insertPunctuation";
 import { uploadTextFile } from "../utilFunctions/uploadTextFile";
 import { uploadTTSFile } from "../utilFunctions/uploadTTSFile";
+import * as dotenv from 'dotenv';
+
+dotenv.config(); // Configuring environment variables
 
 export const createFileController = async (req: Request, res: Response) => {
-    const { htmlDocument, audioFileVoiceOption, textFileOption, audioFileOption } = req.body;
+    const { htmlDocument, audioFileVoiceOption, textFileOption, audioFileOption } = req.body.body;
 
     // Start text concatenation process using NodeList and recursion with generateArticleText
     let fileText = generateArticleText(htmlDocument);
@@ -23,8 +26,8 @@ export const createFileController = async (req: Request, res: Response) => {
       if (textFileUploadStatus[0] && audioFileUploadStatus[0]) {
         res.status(201).json({
           uploadURL: [
-            "https://" + process.env.AWS_BUCKET_NAME + '.s3-' + process.env.AWS_REGION + '.amazonaws.com/' + textFileUploadStatus[1] + '.txt',
-            "https://" + process.env.AWS_BUCKET_NAME + '.s3-' + process.env.AWS_REGION + '.amazonaws.com/' + textFileUploadStatus[1] + '.mp3'
+            "https://" + process.env.AWS_S3_BUCKET_NAME + '.s3-' + process.env.AWS_REGION + '.amazonaws.com/' + textFileUploadStatus[1] + '.txt',
+            "https://" + process.env.AWS_S3_BUCKET_NAME + '.s3-' + process.env.AWS_REGION + '.amazonaws.com/' + audioFileUploadStatus[1] + '.mp3'
           ]
         });
       }
@@ -39,7 +42,7 @@ export const createFileController = async (req: Request, res: Response) => {
       let textFileUploadStatus = await uploadTextFile(punctuationInsertedText);
       if (textFileUploadStatus[0]) {
         res.status(201).json({
-          uploadURL: ["https://" + process.env.AWS_BUCKET_NAME + '.s3-' + process.env.AWS_REGION + '.amazonaws.com/' + textFileUploadStatus[1] + '.txt']
+          uploadURL: ["https://" + process.env.AWS_S3_BUCKET_NAME + '.s3-' + process.env.AWS_REGION + '.amazonaws.com/' + textFileUploadStatus[1] + '.txt']
         });
       }
       else {

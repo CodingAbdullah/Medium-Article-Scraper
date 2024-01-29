@@ -45,7 +45,7 @@ const MediaFilesPage: FC = () => {
             });
         }
         else {
-            updateAlert('invald-medium-url');
+            updateAlert('invalid-medium-url');
         }
     }
 
