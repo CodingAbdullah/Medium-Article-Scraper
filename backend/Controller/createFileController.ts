@@ -21,13 +21,13 @@ export const createFileController = async (req: Request, res: Response) => {
     // Proceed with each of the two scenarios: audio + text or text only, text is always generated
     if (textFileOption && audioFileOption) {
       let textFileUploadStatus = await uploadTextFile(punctuationInsertedText);
-      let audioFileUploadStatus = await uploadTTSFile(punctuationInsertedText, audioFileVoiceOption);
+      let audioFileUploadStatus = await uploadTTSFile(punctuationInsertedText, { voice: audioFileVoiceOption });
 
       if (textFileUploadStatus[0] && audioFileUploadStatus[0]) {
         res.status(201).json({
           uploadURL: [
-            "https://" + process.env.AWS_S3_BUCKET_NAME + '.s3-' + process.env.AWS_REGION + '.amazonaws.com/' + textFileUploadStatus[1] + '.txt',
-            "https://" + process.env.AWS_S3_BUCKET_NAME + '.s3-' + process.env.AWS_REGION + '.amazonaws.com/' + audioFileUploadStatus[1] + '.mp3'
+            "https://" + process.env.AWS_S3_BUCKET_NAME + '.s3.' + process.env.AWS_REGION + '.amazonaws.com/Medium-Article-' + textFileUploadStatus[1] + '.txt',
+            "https://" + process.env.AWS_S3_BUCKET_NAME + '.s3.' + process.env.AWS_REGION + '.amazonaws.com/Medium-Article-' + audioFileUploadStatus[1] + '.mp3'
           ]
         });
       }
@@ -42,7 +42,7 @@ export const createFileController = async (req: Request, res: Response) => {
       let textFileUploadStatus = await uploadTextFile(punctuationInsertedText);
       if (textFileUploadStatus[0]) {
         res.status(201).json({
-          uploadURL: ["https://" + process.env.AWS_S3_BUCKET_NAME + '.s3-' + process.env.AWS_REGION + '.amazonaws.com/' + textFileUploadStatus[1] + '.txt']
+          uploadURL: ["https://" + process.env.AWS_S3_BUCKET_NAME + '.s3.' + process.env.AWS_REGION + '.amazonaws.com/Medium-Article-' + textFileUploadStatus[1] + '.txt']
         });
       }
       else {
