@@ -1,3 +1,5 @@
 export default interface FileType {
-    files: Array<string>
+    textURL: string,
+    audioURLs: Array<string>,
+    audioFileQuantity: number
 }

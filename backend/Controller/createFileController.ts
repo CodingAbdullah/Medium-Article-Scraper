@@ -12,7 +12,7 @@ export const createFileController = async (req: Request, res: Response) => {
     const { htmlDocument, audioFileVoiceOption, textFileOption, audioFileOption } = req.body.body;
     
     // Incorporating the UploadURLDataType to efficiently pass back data to the client
-    let uploadURL: UploadURLDataType = { textURL: '', audioURLs: [], fileQuantity: 0 }
+    let uploadURL: UploadURLDataType = { textURL: '', audioURLs: [], audioFileQuantity: 0 }
 
     // Start text concatenation process using NodeList and recursion with generateArticleText
     let fileText = generateArticleText(htmlDocument);
@@ -29,20 +29,20 @@ export const createFileController = async (req: Request, res: Response) => {
       
       // File is too large to process for Audio purposes
       if (textFileUploadStatus[0] && audioFileUploadStatus[0] && audioFileUploadStatus[2] === -1){
-        // Set fileQuantity to -1 to indicate Audio file is too large, but send back Text file
+        // Set audioFileQuantity to -1 to indicate Audio file is too large, but send back Text file
         uploadURL.textURL = "https://" + process.env.AWS_S3_BUCKET_NAME + '.s3.' + process.env.AWS_REGION + '.amazonaws.com/Medium-Article-' + textFileUploadStatus[1] + '.txt',
-        uploadURL.fileQuantity = -1;
+        uploadURL.audioFileQuantity = -1;
         
         res.status(201).json({
           uploadURL
         });
       }
-      // Set fileQuantity to number of file parts and send back the text and audio file parts
+      // Set audioFileQuantity to number of file parts and send back the text and audio file parts
       else if (textFileUploadStatus[0] && audioFileUploadStatus[0] && audioFileUploadStatus[2] > 0) {
         uploadURL.textURL = "https://" + process.env.AWS_S3_BUCKET_NAME + '.s3.' + process.env.AWS_REGION + '.amazonaws.com/Medium-Article-' + textFileUploadStatus[1] + ".txt";
-        uploadURL.fileQuantity = audioFileUploadStatus[2];
+        uploadURL.audioFileQuantity = audioFileUploadStatus[2];
 
-        for (var i = 0; i < audioFileUploadStatus[2]; i++) {
+        for (var i = 1; i <= audioFileUploadStatus[2]; i++) {
           uploadURL.audioURLs.push("https://" + process.env.AWS_S3_BUCKET_NAME + '.s3.' + process.env.AWS_REGION + '.amazonaws.com/Medium-Article-' + audioFileUploadStatus[1] + `-part-${i}.mp3`);
         }
 
@@ -55,7 +55,7 @@ export const createFileController = async (req: Request, res: Response) => {
         // Status equates to 0 as the request processes as is
         uploadURL.textURL = "https://" + process.env.AWS_S3_BUCKET_NAME + '.s3.' + process.env.AWS_REGION + '.amazonaws.com/Medium-Article-' + textFileUploadStatus[1] + '.txt';
         uploadURL.audioURLs.push("https://" + process.env.AWS_S3_BUCKET_NAME + '.s3.' + process.env.AWS_REGION + '.amazonaws.com/Medium-Article-' + audioFileUploadStatus[1] + '.mp3');
-        uploadURL.fileQuantity = 0;
+        uploadURL.audioFileQuantity = 1;
 
         res.status(201).json({
           uploadURL
