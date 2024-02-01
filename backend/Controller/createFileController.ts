@@ -30,7 +30,7 @@ export const createFileController = async (req: Request, res: Response) => {
       // File is too large to process for Audio purposes
       if (textFileUploadStatus[0] && audioFileUploadStatus[0] && audioFileUploadStatus[2] === -1){
         // Set audioFileQuantity to -1 to indicate Audio file is too large, but send back Text file
-        uploadURL.textURL = "https://" + process.env.AWS_S3_BUCKET_NAME + '.s3.' + process.env.AWS_REGION + '.amazonaws.com/Medium-Article-' + textFileUploadStatus[1] + '.txt',
+        uploadURL.textURL = "https://" + process.env.AWS_S3_BUCKET_NAME + '.s3.' + process.env.AWS_REGION + '.amazonaws.com/Medium-Article-' + textFileUploadStatus[1] + '.txt';
         uploadURL.audioFileQuantity = -1;
         
         res.status(201).json({
@@ -38,7 +38,7 @@ export const createFileController = async (req: Request, res: Response) => {
         });
       }
       // Set audioFileQuantity to number of file parts and send back the text and audio file parts
-      else if (textFileUploadStatus[0] && audioFileUploadStatus[0] && audioFileUploadStatus[2] > 0) {
+      else if (textFileUploadStatus[0] && audioFileUploadStatus[0] && audioFileUploadStatus[2] > 1) {
         uploadURL.textURL = "https://" + process.env.AWS_S3_BUCKET_NAME + '.s3.' + process.env.AWS_REGION + '.amazonaws.com/Medium-Article-' + textFileUploadStatus[1] + ".txt";
         uploadURL.audioFileQuantity = audioFileUploadStatus[2];
 
