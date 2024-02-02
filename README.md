@@ -1,23 +1,22 @@
 # Medium Article Scraper
-
-Looking for a Medium Article Scraper? Well, you have stumbled across some good luck! This application allows anyone instantaneous access to text and audio files of any non-paywall Medium.com articles.
+Looking for a Medium Article Scraper? Well, you have stumbled across some good luck! <b>This application allows anyone to instantaneous create audio and text files for any non-paywall Medium.com articles.</b>
 
 Paywall articles are not supported because membership is required to access them. They are not available to the public.
 
-Most of the hard work is done by using ScrapingAnt's WebScraper API. A simple API that requires a website URL from which the entire HTML Document of the page is returned.
+Most of the hard work is done by using <b>ScrapingAnt's WebScraper API</b>. A simple API that requires a website URL from which the entire HTML document of the page is returned.
 
 Luckily, Medium articles are one page so all you need to do is enter in the website URL of the specific non-paywall article for which you would like to generate audio and text files.
 
 The WebScraper API can be found <a href="https://rapidapi.com/okami4kak/api/scrapingant/details">here</a>. After retrieving the HTML document, an intricate process takes place (simplified below) in which text is parsed from the page's DOM. <br />
 
-A variety of utility functions are in place that help clean and format the text which is written to a text file or ready to be used for generating the audio stream for the audio file.
+A variety of utility functions are in place that help clean and format text which is written to a text file or ready to be used for generating the audio stream for the audio file.
 
 ## Simple process
-The user has the freedom of choosing whether or not they would like any audio file(s) to be generated from their article. By default, a text file is always generated. There are limitations to the audio file generation which will be touched on momentarily.
+The user has the freedom of choosing whether or not they would like any audio file(s) to be generated from an article. By default, a text file is always generated. There are limitations to the audio file generation which will be touched on momentarily.
 
-Medium articles follow a standard format and offer limited options for styling. When parsing text, it can be cumbersome to figure out how to go about it. <br />
-
-Problems like these are open-ended and even the most comprehensive solutions might not cover all edge-cases. In the case of Medium, article content resides in `<article />` tags and includes limited options for styling (`<em />`, `<strong />`, etc.). 
+ When parsing text, it can be cumbersome to figure out how to go about it. Problems like these are open-ended and even the most comprehensive solutions might not cover all edge-cases. 
+ 
+Medium articles follow a standard format and offer limited options for styling. In the case of Medium, article content resides in `<article />` tags and includes limited options for styling (`<em />`, `<strong />`, etc.). 
 
 This makes data parsing much easier as the problem is scoped and a specific solution is developed.
 
@@ -52,7 +51,6 @@ Setting up the project locally or in the cloud is fairly straight forward. For s
 This will allow you to clone the repository using Git, work through installing dependencies using Node, containerizing the application using Docker, and finally, deploying AWS infrastructure in the cloud using Terraform.
 
 ### AWS Cloud Infrastructure Setup
-
 The following AWS services are being used:
 <ul>
     <li><b><i>AWS ECS</i></b> for running the two containers (front-end + back-end servers)</li>
@@ -79,7 +77,6 @@ Terraform is an <b>Infrastructure as Code (IaC)</b> offering which allows one to
 The main file that is used to plan and provision AWS infrastructure is the `main.tf` file located in the root directory. After deployment, a `terraform.tfstate` file is generated which keeps track of any changes made to the deployment which is used on the next apply request (if any).
 
 ### Deployment Scripts
-
 In the root directory of this project, you will find scripts for both Linux (Shell) and Windows (Powershell) which you can use to automate the entire deployment process.
 
 The scripts do the following: 
@@ -88,7 +85,7 @@ The scripts do the following:
 - Push the Docker images to AWS ECR
 - Ensure environment variables are configured
 - Create a file for adding Terraform variables 
-- Proceed with Terraform deployment by running the aforementioned terraform commands on the `main.tf` file
+- Proceed with Terraform deployment by running the aforementioned Terraform commands on the `main.tf` file
 
 Ensure that the scripts are executable (use `chmod` to set file permissions) and that you provide the `AWS_ACCESS_ID` and `AWS_SECRET_KEY` like this in the root directory `/`: 
 <br />
@@ -148,13 +145,6 @@ It may be that you already have this repository cloned, but changes could happen
 
 `git pull`
 
-### Kickstart the Front-end Server
-To kickstart the front-end server locally on your machine, ensure you have port `3000` open and available for use. 
-
-The front-end client code resides in the parent directory `/` of the repository so you can simply start the server by running the following:
-
-```npm start```
-
 ### Kickstart the Back-end Server
 To kickstart the back-end server locally on your machine, ensure that  you have created a `.env` file in the back-end directory of this project in `/backend` with the `AWS_ACCESS_ID` and `AWS_SECRET_KEY` credentials in it. 
 
@@ -166,6 +156,7 @@ touch .env
 ```
 
 Additionally, you will also need to add the following secrets:
+<br />
 ```AWS_S3_BUCKET_NAME=''```
 <br />
 ```AWS_REGION=''```
@@ -194,6 +185,13 @@ npx ts-node server
 ```
 
 This will start the back-end server on port `5000` and ensure that the Express server runs smoothly.
+
+### Kickstart the Front-end Server
+To kickstart the front-end server locally on your machine, ensure you have port `3000` open and available for use. 
+
+The front-end client code resides in the parent directory `/` of the repository so you can simply start the server by running the following:
+
+```npm start```
 
 ## Conclusion
 Feel free to check out any of the following links for more documentation:
