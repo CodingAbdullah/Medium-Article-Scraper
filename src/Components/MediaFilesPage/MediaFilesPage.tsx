@@ -53,7 +53,7 @@ const MediaFilesPage: FC = () => {
             updateAlert('loading');
 
             // Once the options are set, make call to the back-end to fetch files
-            axios.post('http://localhost:5000/parse-file', options)
+            axios.post('https://3.129.218.32.nip.io/parse-file', options)
             .then((response: any) => {
 
                 // Conditionally update Alert and update file state of URLs of text/audio files
