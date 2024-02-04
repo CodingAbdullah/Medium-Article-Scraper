@@ -1,4 +1,6 @@
 # Medium Article Scraper
+<b><i>Official Link: <a target="_blank" href="https://mediumdotcomscraper.pro"> https://mediumdotcomscraper.pro</a></b></i>
+
 Looking for a Medium Article Scraper? Well, you have stumbled across some good luck! <b>This application allows anyone to instantaneous create audio and text files for any non-paywall Medium.com articles.</b>
 
 Paywall articles are not supported because membership is required to access them. They are not available to the public.
