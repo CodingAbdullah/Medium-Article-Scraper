@@ -18,7 +18,7 @@ The user has the freedom of choosing whether or not they would like any audio fi
  
 Medium articles follow a standard format and offer limited options for styling. In the case of Medium, article content resides in `<article />` tags and includes limited options for styling (`<em />`, `<strong />`, etc.). 
 
-This makes data parsing much easier as the problem is scoped and a specific solution is developed.
+This makes data parsing easier as the problem is scoped and a specific solution is developed.
 
 Tables in the code overview section detail the flow of how text is parsed and made ready for generating the appropriate text/audio files.
 
@@ -51,7 +51,9 @@ Setting up the project locally or in the cloud is fairly straight forward. For s
 This will allow you to clone the repository using Git, work through installing dependencies using Node, containerizing the application using Docker, and finally, deploying AWS infrastructure in the cloud using Terraform.
 
 ### AWS Cloud Infrastructure Setup
-The following AWS services are being used:
+The actual deployment of the application follows a simple pattern. However, if you are looking for a more quick and efficient way of custom deployment, this section explains it in detail.
+
+The following AWS services can be used:
 <ul>
     <li><b><i>AWS ECS</i></b> for running the two containers (front-end + back-end servers)</li>
     <li><b><i>AWS ECS Task Definition</i></b> for creating a cloud container network</li>
@@ -70,8 +72,9 @@ The following diagram illustrates this in detail:
 This setup offers efficiency, scalability, reliability, and security. Taking advantage of the many services AWS offers to ensure maximal uptime for the web application.
 
 ## Terraform: Infrastructure as Code Deployment
-Deployment to the cloud is made easy with the help of Terraform. Rather than rely on the console to manually setup and integrate services, infrastructure provisioning can be automated with the help of code.
+<b><i>This section is still in progress.</i></b>
 
+Deployment to the cloud is made easy with the help of Terraform. The process of provisioning infrastructure can be automated with code.
 Terraform is an <b>Infrastructure as Code (IaC)</b> offering which allows one to codify their infrastructure deployment. All that is required is setting up the local environment (`terraform init`), running a plan which allows one to keep track of what is to be deployed (`terraform plan`), and finally deploying the requested infrastructure (`terraform apply`). 
 
 The main file that is used to plan and provision AWS infrastructure is the `main.tf` file located in the root directory. After deployment, a `terraform.tfstate` file is generated which keeps track of any changes made to the deployment which is used on the next apply request (if any).
@@ -135,8 +138,7 @@ From providing type safety by enforcing static typing to class/object-oriented d
 
 The full-stack application utilizes TypeScript as its main language for front-end and back-end implementation.
 
-Before you can do anything, you need to ensure you have cloned this repository by running the following:
-
+Before you can do anything, you need to ensure you have cloned the following repository:
 ```
 git clone https://github.com/CodingAbdullah/Medium-Article-Scraper.git
 ```

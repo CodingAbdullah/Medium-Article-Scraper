@@ -1,13 +1,14 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Medium Article Scraper web application",
+  "repository": "https://github.com/CodingAbdullah/Medium-Article-Scraper",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node server"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Abdullah Muhammad",
+  "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.501.0",
     "@types/cors": "^2.8.17",
@@ -21,8 +22,9 @@
     "dotenv": "^16.4.0",
     "express": "^4.18.2",
     "openai": "^4.26.0",
-    "scraperapi-sdk": "^2.0.1",
+    "serverless": "^3.38.0",
     "ts-node": "^10.9.2",
+    "typescript": "^5.3.3",
     "uuid": "^9.0.1",
     "xmldom": "^0.6.0"
   }

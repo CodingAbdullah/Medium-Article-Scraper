@@ -48,7 +48,8 @@ if ($args[0].Length -eq 20 -and $args[1].Length -eq 40) {
         # Notify user of successful deployment and remind them to store the state file someplace safe
         Write-Host 'AWS deployment complete! Please store the terraform.tfstate file someplace safe!'
         Write-Host 'The web application is live!'
-    } else {
+    } 
+    else {
         Write-Host 'Please setup your environment variables file'
         Write-Host 'Ensure that the following secrets are added:'
         Write-Host 'AWS_S3_BUCKET_NAME=<value>'
@@ -61,7 +62,8 @@ if ($args[0].Length -eq 20 -and $args[1].Length -eq 40) {
         Write-Host 'WEB_SCRAPER_URL=<value>'
         exit 1
     }
-} else {
+} 
+else {
     Write-Host 'Invalid keys!'
     exit 1
 }
