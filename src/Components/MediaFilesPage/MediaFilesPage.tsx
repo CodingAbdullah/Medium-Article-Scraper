@@ -169,7 +169,7 @@ const MediaFilesPage: FC = () => {
                     </>
                     : null
                 }
-                <button style={{ fontFamily: 'Permanent Marker', marginTop: '1rem', marginBottom: '1rem' }} type="submit" className="btn btn-success">Submit</button>
+                <button style={{ fontFamily: 'Permanent Marker', marginTop: '1rem', marginBottom: '1rem' }} type="submit" className="btn btn-dark">Submit</button>
             </form>
             { alert === 'valid-medium-url' || alert === 'valid-medium-url-overload' && files !== null ? <FilePanel files={ files } /> : null }
         </div>

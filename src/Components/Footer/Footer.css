@@ -1,0 +1,19 @@
+.react-logo {
+    height: 5.5vmin;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .react-logo {
+      animation: App-logo-spin infinite 10s linear;
+    }
+}
+  
+@keyframes react-logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+}

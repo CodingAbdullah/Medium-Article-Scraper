@@ -15,7 +15,7 @@ const HomePage: FC = () => {
                 Select the button below to start cookin'!
                 </p>
                 <Link to="/medium-dot-com-files">
-                    <button style={{ fontFamily: 'Permanent Marker', marginTop: '1rem' }} className='btn btn-success'>
+                    <button style={{ fontFamily: 'Permanent Marker', marginTop: '1rem' }} className='btn btn-dark'>
                         Take me to the Tool!
                     </button>
                 </Link>
