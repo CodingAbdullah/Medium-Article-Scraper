@@ -95,7 +95,7 @@ const MediaFilesPage: FC = () => {
             <div className='container' style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }}>
                 <p style={{ marginTop: '1rem' }}>
                     In the form below, enter in the URL of the free, public-facing Medium article of your choice.
-                    You can request an audio file and/or a readable text file to download.
+                    You can request an audio file and select its voice type and/or a readable text file to download.
                 </p>
                 { alert === '' ? null : <Alert type={ alert } /> }
             </div>

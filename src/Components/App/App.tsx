@@ -6,6 +6,7 @@ import HomePage from '../HomePage/HomePage';
 import MediaFilesPage from '../MediaFilesPage/MediaFilesPage';
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Footer from '../Footer/Footer';
+import '../Footer/Footer.css';
 
 const App: FC = () => {
   return (
