@@ -114,61 +114,14 @@ const MediaFilesPage: FC = () => {
                         Audio File
                     </label>
                 </div>
-                {
-                    audioToggle ? 
-                    <>
-                        <h6 style ={{ marginTop: '2rem' }}>Audio Voice Type</h6>
-                        <div className="form-check">
-                            <div className='container' style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }}>
-                                <input className="form-check-input" type="radio" onChange={ e => updateAudioFileVoice(e.target.value) } value="alloy" name="audioVoice" defaultChecked />
-                                <label className="form-check-label">
-                                    Alloy
-                                </label>
-                            </div>
-                        </div>
-                        <div className="form-check">
-                            <div className='container' style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }}>
-                                <input className="form-check-input" type="radio" onChange={ e => updateAudioFileVoice(e.target.value) }  value="echo" name="audioVoice" />
-                                <label className="form-check-label">
-                                    Echo
-                                </label>
-                            </div>
-                        </div>
-                        <div className="form-check">
-                            <div className='container' style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }}>
-                                <input className="form-check-input" type="radio" onChange={ e => updateAudioFileVoice(e.target.value) }  value="fable" name="audioVoice" />
-                                <label className="form-check-label">
-                                    Fable
-                                </label>
-                            </div>
-                        </div>
-                        <div className="form-check">
-                            <div className='container' style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }}>
-                                <input className="form-check-input" type="radio" onChange={ e => updateAudioFileVoice(e.target.value) }  value="oynx" name="audioVoice" />
-                                <label className="form-check-label">
-                                    Oynx
-                                </label>
-                            </div>
-                        </div>
-                        <div className="form-check">
-                            <div className='container' style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }}>
-                                <input className="form-check-input" type="radio" onChange={ e => updateAudioFileVoice(e.target.value) }  value="nova" name="audioVoice" />
-                                <label className="form-check-label">
-                                    Nova
-                                </label>
-                            </div>
-                        </div>
-                        <div className="form-check">
-                            <div className='container' style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }}>
-                                <input className="form-check-input" type="radio" onChange={ e => updateAudioFileVoice(e.target.value) }  value="shimmer" name="audioVoice" />
-                                <label className="form-check-label">
-                                    Shimmer
-                                </label>
-                            </div>
-                        </div>
-                    </>
-                    : null
-                }
+                <select style={{ marginTop: '0.5rem', marginLeft: 'auto', marginRight: 'auto', width: '50%' }} onChange={ e => updateAudioFileVoice(e.target.value) } disabled={ !audioToggle } className="form-select" aria-label="Default select example">
+                    <option value="alloy">Alloy</option>
+                    <option value="echo">Echo</option>
+                    <option value="fable">Fable</option>
+                    <option value="oynx">Oynx</option>
+                    <option value="nova">Nova</option>
+                    <option value="shimmer">Shimmer</option>
+                </select>
                 <button style={{ fontFamily: 'Permanent Marker', marginTop: '1rem', marginBottom: '1rem' }} type="submit" className="btn btn-dark">Submit</button>
             </form>
             { alert === 'valid-medium-url' || alert === 'valid-medium-url-overload' && files !== null ? <FilePanel files={ files } /> : null }
