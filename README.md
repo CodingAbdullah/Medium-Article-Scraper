@@ -1,24 +1,26 @@
 # Medium Article Scraper
 <b><i>Official Link: <a target="_blank" href="https://mediumdotcomscraper.pro"> https://mediumdotcomscraper.pro</a></b></i>
 
-Looking for a Medium Article Scraper? Well, you have stumbled across some good luck! <b>This application allows anyone to instantaneous create audio and text files for any non-paywall Medium.com articles.</b>
+Looking for a Medium.com article scraper? Well, you have stumbled across some good luck! <b>This application allows anyone to instantaneous create audio and text files for any non-paywall Medium.com articles.</b>
 
 Paywall articles are not supported because membership is required to access them. They are not available to the public.
 
-Most of the hard work is done by using <b>ScrapingAnt's WebScraper API</b>. A simple API that requires a website URL from which the entire HTML document of the page is returned.
+Most of the work is done using <b>ScrapingAnt's WebScraper API</b>. An API that generates a valid HTML document from an authentic Medium.com URL.
 
-Luckily, Medium articles are one page so all you need to do is enter in the website URL of the specific non-paywall article for which you would like to generate audio and text files.
-
-The WebScraper API can be found <a href="https://rapidapi.com/okami4kak/api/scrapingant/details">here</a>. After retrieving the HTML document, an intricate process takes place (simplified below) in which text is parsed from the page's DOM. <br />
+The WebScraper API can be found <b><u><a style="color: black;" href="https://rapidapi.com/okami4kak/api/scrapingant/details">here</a></b></u>. After retrieving the HTML document, an intricate process takes place (simplified below) in which text is parsed from the page's DOM. <br />
 
 A variety of utility functions are in place that help clean and format text which is written to a text file or ready to be used for generating the audio stream for the audio file.
 
-## Simple process
-The user has the freedom of choosing whether or not they would like any audio file(s) to be generated from an article. By default, a text file is always generated. There are limitations to the audio file generation which will be touched on momentarily.
+Medium articles are one page so all you need to do is enter in the article URL of the specific non-paywall article for which you would like to generate audio and text files.
 
- When parsing text, it can be cumbersome to figure out how to go about it. Problems like these are open-ended and even the most comprehensive solutions might not cover all edge-cases. 
+## Simple process
+The user has the freedom of choosing whether or not they would like any audio file(s) to be generated from an article. By default, a text file is always generated. 
+
+There are limitations to audio file generation which will be touched on momentarily.
+
+Parsing text is a complex, open-ended problem and even the most comprehensive solutions might not cover all edge-cases. 
  
-Medium articles follow a standard format and offer limited options for styling. In the case of Medium, article content resides in `<article />` tags and includes limited options for styling (`<em />`, `<strong />`, etc.). 
+Luckily, Medium articles follow a standard format and offer limited options for styling. Article content resides in `<article />` tags and includes only select options for styling (`<em />`, `<strong />`, etc.). 
 
 This makes data parsing easier as the problem is scoped and a specific solution is developed.
 
@@ -29,16 +31,16 @@ For audio file generation, the <b>OpenAI TTS API</b> is incorporated. It offers 
 
 Once all the text has been extracted from the HTML document, it is passed as input to the TTS API to generate the audio file. OpenAI's TTS API  offers six different voice types: `alloy`, `echo`, `fable`, `oynx`, `nova`, `shimmer`.
 
-Users have the freedom of selecting any voice type. More information on this API can be found <a target="_blank" href="https://platform.openai.com/docs/guides/text-to-speech">here</a>.
+Users have the freedom of selecting any voice type. More information on this API can be found <b><u><a style="color: black" target="_blank" href="https://platform.openai.com/docs/guides/text-to-speech">here</a></b></u>.
 
 #### Limitations
-There are limitations that exist when it comes to working with the <b>TTS API model</b>. For instance, you can make at most <b>3 conversion requests/minute</b> based on the free-tier model. This obviously increases with the higher-tier purchase plans offered by OpenAI.
+There are limitations that exist when it comes to working with the <b>TTS API model</b>. For instance, you can make at most, <b>3 conversion requests/minute</b> based on the free-tier model. This increases with the higher-tier purchase plans offered by OpenAI.
 
-Additionally, there is a <b>4096 character limit</b>. Meaning that if the text you are trying to convert exceeds 4096 characters, audio for characters up to 4096 will be generated. 
+Additionally, there is a <b>4096 character limit</b>. If the text size for which you are trying to generate audio for exceeds 4096 characters, audio for characters up to the 4096th one will be generated. 
 
-The project takes this into consideration and offers a <b>maximum of 12500 characters/file</b> that can be converted into parts. 12500 characters works to be 3 audio file parts (4096 each, rounded down to 12500). 
+The project takes this into consideration and offers a <b>maximum of 12500 characters/file</b> that can be converted into parts. 12500 characters works to be ~3 audio file parts (4096 each, rounded down to 12500). 
 
-<b>Anything more than 12500 characters is automatically rejected by the application and only the text file is generated for it.</b>
+<b>Anything more than 12500 characters is automatically rejected by the application and only the text file is generated.</b>
 
 ## Project Setup
 Setting up the project locally or in the cloud is fairly straight forward. For starters, you will need to make sure you have the following applications installed locally:
@@ -77,7 +79,9 @@ This setup offers efficiency, scalability, reliability, and security. Taking adv
 <b><i>This section is still in progress.</i></b>
 
 Deployment to the cloud is made easy with the help of Terraform. The process of provisioning infrastructure can be automated with code.
-Terraform is an <b>Infrastructure as Code (IaC)</b> offering which allows one to codify their infrastructure deployment. All that is required is setting up the local environment (`terraform init`), running a plan which allows one to keep track of what is to be deployed (`terraform plan`), and finally deploying the requested infrastructure (`terraform apply`). 
+Terraform is an <b>Infrastructure as Code (IaC)</b> offering which allows one to codify their infrastructure deployment. 
+
+All that is required is setting up the local environment (`terraform init`), running a plan which allows one to keep track of what is to be deployed (`terraform plan`), and finally deploying the requested infrastructure (`terraform apply`). 
 
 The main file that is used to plan and provision AWS infrastructure is the `main.tf` file located in the root directory. After deployment, a `terraform.tfstate` file is generated which keeps track of any changes made to the deployment which is used on the next apply request (if any).
 
