@@ -1,5 +1,5 @@
 # Medium Article Scraper
-<b><i>Official Link: <a target="_blank" href="https://mediumdotcomscraper.pro"> https://mediumdotcomscraper.pro</a></b></i>
+<b><i>Official Link: <u><a style="color:black;" target="_blank" href="https://mediumdotcomscraper.pro"> https://mediumdotcomscraper.pro</a></b></i></u>
 
 Looking for a Medium.com article scraper? Well, you have stumbled across some good luck! <b>This application allows anyone to instantaneous create audio and text files for any non-paywall Medium.com articles.</b>
 
@@ -204,14 +204,16 @@ The front-end client code resides in the parent directory `/` of the repository 
 ## Conclusion
 Feel free to check out any of the following links for more documentation:
 <ul>
-    <li><a target="_blank" href='https://docs.aws.amazon.com/'>AWS</a></li>
-    <li><a target="_blank" href='https://blog.ironmansoftware.com/daily-powershell/bash-powershell-cheatsheet/'>Bash/Powershell Scripting</a></li>
-    <li><a target="_blank" href='https://docs.docker.com/'>Docker</a></li>
-    <li><a target="_blank" href='https://git-scm.com/doc'>Git</a></li>
-    <li><a target="_blank" href='https://nodejs.org/docs/latest/api/'>Node</a></li>
-    <li><a target="_blank" href='https://platform.openai.com/docs/guides/text-to-speech'>OpenAI TTS API</a></li>
-    <li><a target="_blank" href='https://react.dev/'>React</a></li>
-    <li><a target="_blank" href='https://registry.terraform.io/providers/hashicorp/aws/latest/docs'>Terraform</a></li>
-    <li><a target="_blank" href='https://www.typescriptlang.org/docs/'>TypeScript</a></li>
-    <li><a target="_blank" href='https://rapidapi.com/okami4kak/api/scrapingant/details'>Web Scraper API</a></li>
+    <u><b>
+        <li><a style="color:black;" target="_blank" href='https://docs.aws.amazon.com/'>AWS</a></li>
+        <li><a style="color:black;" target="_blank" href='https://blog.ironmansoftware.com/daily-powershell/bash-powershell-cheatsheet/'>Bash/Powershell Scripting</a></li>
+        <li><a style="color:black;" target="_blank" href='https://docs.docker.com/'>Docker</a></li>
+        <li><a style="color:black;" target="_blank" href='https://git-scm.com/doc'>Git</a></li>
+        <li><a style="color:black;" target="_blank" href='https://nodejs.org/docs/latest/api/'>Node</a></li>
+        <li><a style="color:black;" target="_blank" href='https://platform.openai.com/docs/guides/text-to-speech'>OpenAI TTS API</a></li>
+        <li><a style="color:black;" target="_blank" href='https://react.dev/'>React</a></li>
+        <li><a style="color:black;" target="_blank" href='https://registry.terraform.io/providers/hashicorp/aws/latest/docs'>Terraform</a></li>
+        <li><a style="color:black;" target="_blank" href='https://www.typescriptlang.org/docs/'>TypeScript</a></li>
+        <li><a style="color:black;" target="_blank" href='https://rapidapi.com/okami4kak/api/scrapingant/details'>Web Scraper API</a></li>
+    </b></u>
 </ul>

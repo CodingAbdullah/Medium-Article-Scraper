@@ -11,14 +11,14 @@ const FilePanel = (props: { files: FileType }) => {
             <h3 style={{ fontFamily: 'Square Peg' }}>Your Generated Files</h3>
             <p><i>Select any of the links below for instant download!</i></p>
             <div className='container' style={{ marginLeft: 'auto', marginRight: 'auto', width: '50%' }}>
-                <a className='file-links' target="_blank" href={ textURL }>Text File (.txt)</a>
+                <a style={{ color: 'black'}} className='file-links' target="_blank" href={ textURL }>Text File (.txt)</a>
                 <br />
                 {
                     // Using the built-in key parameter in map() function to indicate audio file
                     audioURLs.map((audioFile, key) => {
                         return (
                             <>
-                                <a className='file-links' href={ audioFile }>Audio File Part { key + 1 }</a>
+                                <a style={{ color: 'black'}} className='file-links' href={ audioFile }>Audio File Part { key + 1 }</a>
                                 <br />
                             </>
                         )
