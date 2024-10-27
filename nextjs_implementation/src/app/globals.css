@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* global.css */
+@import url('https://fonts.googleapis.com/css2?family=Square+Peg&family=Permanent+Marker&display=swap');
+
+body {
+    font-family: 'Square Peg', cursive; /* or whatever element you want to apply it to */
+}
+
+h1, h2, h3 {
+    font-family: 'Permanent Marker', cursive; /* Example for headings */
+}
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
