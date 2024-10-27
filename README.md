@@ -13,6 +13,9 @@ A variety of utility functions are in place that help clean and format text whic
 
 Medium articles are one page so all you need to do is enter in the article URL of the specific non-paywall article for which you would like to generate audio and text files.
 
+## Next.js
+A <code>nextjs</code> branch has been created for working on a more efficient and elegant solution for the Medium.com Article Scraper tool. Once finalized, it will be merged to the main branch for production
+
 ## Simple process
 The user has the freedom of choosing whether or not they would like any audio file(s) to be generated from an article. By default, a text file is always generated. 
 
