@@ -1,4 +1,5 @@
 import Head from "next/head"
+import Link from "next/link"
 
 // Landing Page for Medium.com Article Scraper Tool
 export default function LandingPage() {
@@ -6,9 +7,9 @@ export default function LandingPage() {
     <>
       <Head>
         <link
-            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
-            rel="stylesheet"
-          />
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
       </Head>
       <div className="min-h-screen bg-gradient-to-b from-gray-100 to-white flex flex-col">
         <main className="flex-grow flex items-center justify-center p-4">
@@ -33,14 +34,16 @@ export default function LandingPage() {
               ))}
             </ul>
             <div className="text-center">
-              <button 
-                className="bg-black hover:bg-grey-700 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center transition duration-150 ease-in-out"
-              >
-                Start Scraping
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
+              <Link href="/tool">
+                <button 
+                  className="bg-black hover:bg-grey-700 text-white font-bold py-2 px-4 rounded-lg inline-flex items-center transition duration-150 ease-in-out"
+                >
+                  Start Scraping
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+              </Link>
             </div>
           </div>
         </main>
