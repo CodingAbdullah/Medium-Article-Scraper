@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "lucide-react": "^0.455.0",
     "next": "15.0.1",
     "nextjs_implementation": "file:",
     "react": "19.0.0-rc-69d4b800-20241021",
-    "react-dom": "19.0.0-rc-69d4b800-20241021"
+    "react-dom": "19.0.0-rc-69d4b800-20241021",
+    "shadcn-ui": "^0.9.3"
   },
   "devDependencies": {
     "@types/node": "^20",
