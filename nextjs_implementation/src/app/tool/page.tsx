@@ -1,16 +1,50 @@
 'use client'
 
 import { useState } from 'react'
-import { Link, FileText, ChevronDown } from 'lucide-react' // Added ChevronDown for dropdown
+import { Link, FileText, AlertCircle } from 'lucide-react'
 
-export default function Component() {
+// Where all the main action happens
+export default function ScraperPage() {
   const [url, setUrl] = useState('')
-  const [format, setFormat] = useState('')
-  const [isOpen, setIsOpen] = useState(false) // Added for dropdown control
+  const [loading, setLoading] = useState(false)
+  const [result, setResult] = useState<any>(null)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Submitted:', { url, format })
+    setLoading(true)
+    setError(null)
+    setResult(null)
+
+    // Check to see if valid Medium Article URL was entered
+    if (new URL(url).hostname !== 'medium.com'){
+        setError("Invalid URL! Refresh and try again!");
+    }
+    else {
+        try {
+            const response = await fetch('/api/scrape', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ url }),
+            });
+
+            const data = await response.json()
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to scrape article')
+            }
+
+            setResult(data)
+        } 
+        catch (error) {
+            setError(error instanceof Error ? error.message : 'Something went wrong')
+        } 
+        finally {
+            setLoading(false)
+        }
+    }
   }
 
   return (
@@ -18,7 +52,7 @@ export default function Component() {
       <div className="max-w-3xl w-full space-y-8">
         <div className="text-center">
           <h5 className="text-4xl font-extrabold text-gray-900 sm:text-4xl md:text-4xl">
-            Tool Form
+            Scraper Tool
           </h5>
           <p className="mt-3 text-2xl text-gray-500 sm:mt-5 sm:text-2xl">
             Extract away!
@@ -26,7 +60,14 @@ export default function Component() {
         </div>
 
         <div className="mt-10 bg-white shadow-xl rounded-lg p-6 sm:p-10">
-          <form onSubmit={ handleSubmit } className="space-y-6">
+          {error && (
+            <div className="mb-6 bg-red-50 border border-red-200 rounded-md p-4 flex items-center space-x-2">
+              <AlertCircle className="h-5 w-5 text-red-500" />
+              <p className="text-red-600">{error}</p>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <label htmlFor="url-input" className="text-lg font-medium text-gray-700">
                 Medium Article URL
@@ -37,6 +78,7 @@ export default function Component() {
                 </span>
                 <input
                   id="url-input"
+                  disabled={loading || !!error}
                   type="url"
                   placeholder="https://medium.com/..."
                   value={url}
@@ -46,48 +88,24 @@ export default function Component() {
                 />
               </div>
             </div>
-
-            <div className="space-y-2">
-              <label htmlFor="format-select" className="text-lg font-medium text-gray-700">
-                Output Format
-              </label>
-              <div className="relative">
-                <button
-                  type="button"
-                  className="w-full flex items-center justify-between rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                  onClick={() => setIsOpen(!isOpen)}
-                >
-                  <span>{format || 'Select output format'}</span>
-                  <ChevronDown className="h-5 w-5" />
-                </button>
-                
-                {isOpen && (
-                  <div className="absolute w-full mt-1 rounded-md bg-white shadow-lg border border-gray-300">
-                    {['Markdown', 'HTML', 'Plain Text', 'JSON'].map((option) => (
-                      <div
-                        key={option}
-                        className="px-3 py-2 hover:bg-gray-100 cursor-pointer"
-                        onClick={() => {
-                          setFormat(option.toLowerCase())
-                          setIsOpen(false)
-                        }}
-                      >
-                        {option}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
             <button 
               type="submit" 
-              className="w-full flex items-center justify-center text-lg h-14 bg-gray-900 hover:bg-gray-800 text-white rounded-md"
+              className="w-full flex items-center justify-center text-lg h-14 bg-gray-900 hover:bg-gray-800 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={loading || !url || !!error}
             >
               <FileText className="w-6 h-6 mr-2" />
-              Extract Article
+              {loading && !error ? 'Extracting...' : 'Extract Article'}
             </button>
           </form>
+
+          {result && (
+            <div className="mt-6 p-4 bg-gray-50 rounded-md">
+              <h6 className="font-medium text-gray-900 mb-2">Result:</h6>
+              <pre className="whitespace-pre-wrap text-sm text-gray-600">
+                {JSON.stringify(result, null, 2)}
+              </pre>
+            </div>
+          )}
         </div>
       </div>
     </div>
