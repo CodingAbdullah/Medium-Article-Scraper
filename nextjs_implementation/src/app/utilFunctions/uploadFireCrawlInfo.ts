@@ -3,9 +3,9 @@ import AWS from 'aws-sdk';
 
 // AWS Configuration (if not already configured elsewhere)
 AWS.config.update({
-    accessKeyId: process.env.AWS_ACCESS_ID!,
-    secretAccessKey: process.env.AWS_SECRET_KEY!,
-    region: process.env.AWS_REGION!
+    accessKeyId: process.env.ACCESS_ID!,
+    secretAccessKey: process.env.SECRET_KEY!,
+    region: process.env.REGION!
 });
 
 // Fire Crawl Data function

@@ -3,9 +3,9 @@ import { PollyVoice } from '../dataTypes/PollyVoiceType';
 
 // Setting Global Configurations for AWS to be used by all services
 AWS.config.update({
-    accessKeyId: process.env.AWS_ACCESS_ID!,
-    secretAccessKey: process.env.AWS_SECRET_KEY!,
-    region: process.env.AWS_REGION!
+    accessKeyId: process.env.ACCESS_ID!,
+    secretAccessKey: process.env.SECRET_KEY!,
+    region: process.env.REGION!
 });
 
 // Generate an audio stream from text and then upload it as an .mp3 file to AWS S3

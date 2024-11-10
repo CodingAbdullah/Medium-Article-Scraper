@@ -3,9 +3,9 @@ import * as AWS from 'aws-sdk';
 
 // Setting Global Configurations for AWS to be used by all services
 AWS.config.update({
-    accessKeyId: process.env.AWS_ACCESS_ID!,
-    secretAccessKey: process.env.AWS_SECRET_KEY!,
-    region: process.env.AWS_REGION!
+    accessKeyId: process.env.ACCESS_ID!,
+    secretAccessKey: process.env.SECRET_KEY!,
+    region: process.env.REGION!
 });
 
 // After having filtered all text from HTML document, generate a text file

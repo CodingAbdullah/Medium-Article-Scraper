@@ -2,8 +2,8 @@ import PunctuationQueue from "../dataTypes/PunctuationQueue";
 
 // Initialize an empty Queue for working with punctuation
 let punctuationQueue = new PunctuationQueue();
-export default function insertPunctuation(articleText: string): string {
 
+export default function insertPunctuation(articleText: string): string {
     // Populate Punctuation Queue for insertion later
     for (let i = 0; i < articleText.length; i++) {
         if (['.', '?', '!'].includes(articleText.charAt(i))) {
