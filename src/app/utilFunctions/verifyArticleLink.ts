@@ -56,6 +56,6 @@ export const verifyArticleLink = async (url: string): Promise<VerifyArticleLinkR
         }
     } 
     catch {
-        throw new Error(`Could not process request);
+        throw new Error('Could not process request');
     }
 };
