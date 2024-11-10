@@ -52,7 +52,7 @@ export const verifyArticleLink = async (url: string): Promise<VerifyArticleLinkR
         } 
         else {
             // If valid article, return the document
-            return { htmlDocument: articleDOMRootNode };
+            return { htmlDocument: articleDOMRootNode as Document};
         }
     } 
     catch {
