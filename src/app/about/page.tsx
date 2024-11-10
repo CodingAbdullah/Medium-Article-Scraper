@@ -1,3 +1,4 @@
+// src/app/about/page.tsx
 'use client'
 
 import { useState } from 'react'
@@ -44,7 +45,7 @@ export default function AboutPage() {
                     About The Scraper
                 </h2>
                 <p className="mb-4">
-                Medium.com provides a built-in audio listener which can translate an article's text to speech. However, it does not provide any mechanism for downloading the audible and nor does it provide the user with the ability to read a plain text file. 
+                Medium.com provides a built-in audio listener which can translate an article&apos;s text to speech. However, it does not provide any mechanism for downloading the audible and nor does it provide the user with the ability to read a plain text file. 
                 <br /> This tool hopes to bridge that gap by allowing users to seamlessly enter a valid non-paywall article link and have an audio file readily available at their disposal.</p>
                 <p className="mb-4">Key features of the scraper include:</p>
                 <ul className="list-disc pl-6 space-y-2 mb-4">
@@ -64,7 +65,7 @@ export default function AboutPage() {
                     Implementation Details
                 </h2>
                 <p className="mb-4">
-                    This tool was built using modern web technologies to ensure reliability, speed, and ease of use. Here's an overview of the implementation:
+                    This tool was built using modern web technologies to ensure reliability, speed, and ease of use. Here&apos;s an overview of the implementation:
                 </p>
                 <ul className="list-disc pl-6 space-y-2 mb-4">
                     <li>
@@ -100,7 +101,7 @@ export default function AboutPage() {
                         </a>
                     </li>
                     <li>
-                        <strong className="block">Medium's Terms of Service</strong>
+                        <strong className="block">Medium&apos;s Terms of Service</strong>
                         <a href="https://policy.medium.com/medium-terms-of-service-9db0094a1e0f" className="text-black hover:underline" target="_blank" rel="noopener noreferrer">
                         <u>- Read Terms of Service</u>
                         </a>
