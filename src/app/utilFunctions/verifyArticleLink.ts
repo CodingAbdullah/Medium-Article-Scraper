@@ -53,7 +53,8 @@ export const verifyArticleLink = async (url: string): Promise<VerifyArticleLinkR
             // If valid article, return the document
             return { htmlDocument: articleDOMRootNode }; // Ensure it's correctly typed
         }
-    } catch (err) {
+    } 
+    catch (err) {
         throw new Error(`Could not process request: ${err instanceof Error ? err.message : String(err)}`);
     }
 };
