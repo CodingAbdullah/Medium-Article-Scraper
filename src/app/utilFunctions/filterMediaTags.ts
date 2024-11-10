@@ -6,7 +6,7 @@
 export default function filterMediaTags(tagName: Array<string>, htmlString: string, shiftIndex: Array<number>) : string {
     for (let i = 0; i < tagName.length; i++) {
       while (htmlString.includes('</' + tagName[i] + '>')) {
-        let filteredString = htmlString.substring(0, htmlString.indexOf('<' + tagName[i]))
+        const filteredString = htmlString.substring(0, htmlString.indexOf('<' + tagName[i]))
         + htmlString.substring(htmlString.indexOf('</' + tagName[i] + '>') + shiftIndex[i]);
   
         htmlString = filteredString;

@@ -6,9 +6,19 @@ import { scrape } from '../../utilFunctions/scrape';
 // Define a type for the mock response
 interface MockResponse {
     statusCode: number;
-    data?: any; // You can replace 'any' with a more specific type if known
+    data?: unknown; // Use 'unknown' instead of 'any' for better type safety
     status: (code: number) => MockResponse;
-    json: (data: any) => MockResponse;
+    json: (data: unknown) => MockResponse;
+}
+
+// Define a type for the expected result from the scrape function
+interface ScrapeResult {
+    uploadURL: {
+        textURL: string;
+        audioURL: string;
+        insightsURL?: string; // Optional
+        fireCrawlURL?: string; // Optional
+    };
 }
 
 // POST request for working with scraping data
@@ -25,7 +35,7 @@ export async function POST(req: NextRequest) {
                 this.statusCode = code;
                 return this;
             },
-            json(data: any) {
+            json(data: unknown) {
                 this.data = data;
                 return this;
             }
@@ -41,10 +51,10 @@ export async function POST(req: NextRequest) {
         });
 
         // If middleware passes, process the scrape
-        const result = await new Promise<any>((resolve, reject) => {
+        const result = await new Promise<ScrapeResult>((resolve, reject) => {
             scrape(mockReq, mockRes);
             if (mockRes.statusCode === 400) reject(mockRes.data); // Reject if scrape fails
-            resolve(mockRes.data); // Resolve with the scrape result
+            resolve(mockRes.data as ScrapeResult); // Resolve with the scrape result
         });
 
         return NextResponse.json(result, { status: 201 }); // Return success response

@@ -1,13 +1,26 @@
+// src/app/tool/page.tsx
 'use client'
 
 import { useState } from 'react';
 import { Link, FileText, AlertCircle } from 'lucide-react';
 
+// Define the structure of the result object
+interface UploadURLData {
+    textURL: string;
+    audioURL: string;
+    insightsURL?: string; // Optional
+    fireCrawlURL?: string; // Optional
+}
+
+interface ScrapeResult {
+    uploadURL: UploadURLData;
+}
+
 // Where all the main action happens
 export default function ScraperPage() {
     const [url, setUrl] = useState('');
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState<any>(null);
+    const [result, setResult] = useState<ScrapeResult | null>(null); // Use the defined type
     const [error, setError] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -33,7 +46,7 @@ export default function ScraperPage() {
                 body: JSON.stringify({ url })
             });
 
-            const data = await response.json();
+            const data: ScrapeResult = await response.json(); // Use the defined type
 
             // Check if the response is OK
             if (!response.ok) {
