@@ -6,6 +6,7 @@ import { uploadFireCrawlInfo } from './uploadFireCrawlInfo';
 import UploadURLDataType from "../dataTypes/UploadURLDataType";
 import generateArticleText from "./generateArticleText";
 import insertPunctuation from "./insertPunctuation";
+import { verifyArticleLink } from "../middleware/verifyArticleLink";
 
 // Custom function for scraping
 export const scrape = async (req: Request, res: Response) => {
@@ -18,7 +19,6 @@ export const scrape = async (req: Request, res: Response) => {
     const fileText = generateArticleText(htmlDocument);
           
     // Add punctuation to the article text where appropriate using the insertPunctuation function
-    // Return the final formatted string to be written to text file
     const punctuationInsertedText = insertPunctuation(fileText);
 
     try {
@@ -46,3 +46,43 @@ export const scrape = async (req: Request, res: Response) => {
         });
     }
 }
+
+// Mock request and response types for testing
+const createMockRequest = (body: any): Request => {
+    return {
+        body: body,
+        // Add any other necessary properties or methods here
+        get: () => {},
+        header: () => {},
+        accepts: () => {},
+        acceptsCharsets: () => {},
+        // ... other methods and properties as needed
+    } as Request;
+};
+
+const createMockResponse = (): Response => {
+    const res: Partial<Response> = {
+        status: (code: number) => {
+            res.statusCode = code;
+            return res;
+        },
+        json: (data: any) => {
+            res.data = data;
+            return res;
+        },
+    };
+    return res as Response;
+};
+
+// Example usage of the mock request and response
+const mockReq = createMockRequest({ body: { body: "example HTML document" } });
+const mockRes = createMockResponse();
+
+// Call the middleware to verify the article link
+await new Promise<void>((resolve, reject) => {
+    verifyArticleLink(mockReq, mockRes, (error?: Error) => {
+        if (error) reject(error); // Reject if there's an error
+        if (mockRes.statusCode === 400) reject(mockRes.data); // Reject if status is 400
+        resolve(); // Resolve if everything is fine
+    });
+});
