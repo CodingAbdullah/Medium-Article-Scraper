@@ -63,15 +63,14 @@ export async function uploadFireCrawlInfo(articleURL: string, fileID: string) {
             Bucket: process.env.S3_BUCKET_NAME as string,
             Key: `firecrawl-${fileID}.json`,
             Body: JSON.stringify(firecrawlData, null, 2),
-            ContentType: 'application/json'
+            ContentType: 'application/json',
+            ContentDisposition: 'attachment; filename="firecrawl-' + fileID + '.json"' // Set Content-Disposition
         });
 
         await s3Client.send(command); // Send the command to S3
-
         return true;
     } 
     catch {
-        console.error("Failed to upload firecrawl to S3");
         throw new Error('Failed to upload to S3');
     }
 }

@@ -30,18 +30,18 @@ export async function uploadTextFile(documentText: string): Promise<UploadTextFi
             Bucket: process.env.S3_BUCKET_NAME!,
             Key: 'Medium-Article-' + textFileID + '.txt',
             Body: documentText,
-            ContentType: 'text/plain' // Specify content type
+            ContentType: 'text/plain', // Specify content type
+            ContentDisposition: 'attachment; filename="Medium-Article-' + textFileID + '.txt"' // Set Content-Disposition
         });
 
         // Sending the command to S3
         await s3Client.send(command);
 
-        console.log('successful');
         // If successful, return true
         return [true, textFileID];
     } 
-    catch { // Improved error handling
-        console.error("Cannot process request");
+    // Error handling
+    catch {
         throw new Error('Cannot process request');
     }
 }

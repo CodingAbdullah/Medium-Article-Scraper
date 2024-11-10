@@ -1,6 +1,18 @@
+// src/app/utilFunctions/uploadTTSFile.ts
 import { PollyClient, StartSpeechSynthesisTaskCommand, GetSpeechSynthesisTaskCommand } from '@aws-sdk/client-polly';
 import { PollyVoice } from '../dataTypes/PollyVoiceType';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
+// Create an S3 client
+const s3Client = new S3Client({
+    region: process.env.REGION,
+    credentials: {
+        accessKeyId: process.env.ACCESS_ID!,
+        secretAccessKey: process.env.SECRET_KEY!,
+    },
+});
+
+// Create a Polly client
 const pollyClient = new PollyClient({
     region: process.env.REGION,
     credentials: {
@@ -12,7 +24,7 @@ const pollyClient = new PollyClient({
 // Define a type for the return value of the uploadTTSFile function
 type UploadTTSFileResult = [boolean, string | null];
 
-export async function uploadTTSFile(documentText: string, audioFileID: string): Promise<UploadTTSFileResult> {    
+export async function uploadTTSFile(documentText: string, audioFileID: string): Promise<UploadTTSFileResult> {
     const MAX_TEXT_LENGTH_ASYNC = 50000;  // For asynchronous calls
 
     if (documentText.length <= MAX_TEXT_LENGTH_ASYNC) {
@@ -26,7 +38,7 @@ export async function uploadTTSFile(documentText: string, audioFileID: string): 
                 TextType: 'text' as const,
                 VoiceId: PollyVoice.MATTHEW,
                 OutputS3BucketName: process.env.S3_BUCKET_NAME!, // Specify the S3 bucket for output
-                OutputS3KeyPrefix: `Medium-Article-${audioFileID}`, // Prefix for the output file
+                OutputS3KeyPrefix: ``, // Prefix for the output file
             };
 
             // Start the speech synthesis task
@@ -47,8 +59,17 @@ export async function uploadTTSFile(documentText: string, audioFileID: string): 
                 taskStatus = taskResult.SynthesisTask?.TaskStatus;
 
                 if (taskStatus === 'completed') {
-                    // The audio file is ready in S3
-                    return [true, audioFileID];
+                    // Upload the audio file to S3 with Content-Disposition
+                    const command = new PutObjectCommand({
+                        Bucket: process.env.S3_BUCKET_NAME!,
+                        Key: `audio-${audioFileID}.mp3`,
+                        Body: taskResult.SynthesisTask?.OutputUri, // Assuming you have the audio data here
+                        ContentType: 'audio/mpeg', // Set the content type
+                        ContentDisposition: `attachment; filename="audio-${audioFileID}.mp3"` // Set Content-Disposition
+                    });
+
+                    await s3Client.send(command); // Upload the audio file to S3
+                    return [true, audioFileID]; // Return success
                 } 
                 else if (taskStatus === 'failed') {
                     throw new Error('Speech synthesis task failed');
@@ -57,8 +78,7 @@ export async function uploadTTSFile(documentText: string, audioFileID: string): 
 
             return [false, audioFileID]; // If the task is not completed or failed
         } 
-        catch (err) {
-            console.error('Error uploading TTS file:', err);
+        catch {
             throw new Error('Error uploading TTS file'); // Log the error for debugging
         }
     } 

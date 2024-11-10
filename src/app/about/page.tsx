@@ -51,7 +51,7 @@ export default function AboutPage() {
                 <ul className="list-disc pl-6 space-y-2 mb-4">
                     <li>Fast and accurate content extraction</li>
                     <li>Supports multiple forms of output (text audio, markdown, etc.)</li>
-                    <li>Gather article insights</li>
+                    <li>Gather article insights as well as LLM-ready data with Fire Crawl</li>
                     <li>User-friendly interface</li>
                     <li>Respect for Medium.com robots.txt and ethical scraping practices</li>
                 </ul>
@@ -101,12 +101,6 @@ export default function AboutPage() {
                         </a>
                     </li>
                     <li>
-                        <strong className="block">Medium&apos;s Terms of Service</strong>
-                        <a href="https://policy.medium.com/medium-terms-of-service-9db0094a1e0f" className="text-black hover:underline" target="_blank" rel="noopener noreferrer">
-                        <u>- Read Terms of Service</u>
-                        </a>
-                    </li>
-                    <li>
                         <strong className="block">Web Scraping Best Practices</strong>
                         <a href="https://www.zyte.com/learn/web-scraping-best-practices/" className="text-black hover:underline" target="_blank" rel="noopener noreferrer">
                         <u>- Guide to Best Practices</u>
@@ -122,6 +116,12 @@ export default function AboutPage() {
                         <strong className="block">React Documentation</strong>
                         <a href="https://reactjs.org/docs/getting-started.html" className="text-black hover:underline" target="_blank" rel="noopener noreferrer">
                         <u>- Learn More about React.js</u>
+                        </a>
+                    </li>
+                    <li>
+                        <strong className="block">Fire Crawl Documentation</strong>
+                        <a href="https://www.firecrawl.dev/" className="text-black hover:underline" target="_blank" rel="noopener noreferrer">
+                        <u>- Learn More about Fire Crawl</u>
                         </a>
                     </li>
                 </ul>

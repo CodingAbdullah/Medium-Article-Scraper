@@ -72,15 +72,14 @@ export async function uploadInsightsFile(articleText: string, fileID: string): P
             Bucket: process.env.S3_BUCKET_NAME!,
             Key: `insights-${fileID}.txt`,
             Body: formattedContent,
-            ContentType: 'text/plain'
+            ContentType: 'text/plain',
+            ContentDisposition: 'attachment; filename="insights-' + fileID + '.txt"' // Set Content-Disposition
         });
         
         await s3Client.send(command); // Send the command to S3
-
         return true;
     } 
     catch {
-        console.error("Could not process request");
         throw new Error("Could not process request");
     }
 }
