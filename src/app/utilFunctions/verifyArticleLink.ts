@@ -55,7 +55,7 @@ export const verifyArticleLink = async (url: string): Promise<VerifyArticleLinkR
             return { htmlDocument: articleDOMRootNode };
         }
     } 
-    catch (err) {
-        throw new Error(`Could not process request: ${err}`);
+    catch {
+        throw new Error(`Could not process request);
     }
 };

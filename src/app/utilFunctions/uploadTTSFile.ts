@@ -45,7 +45,7 @@ export async function uploadTTSFile(documentText: string, audioFileID: string): 
             throw new Error('No audio stream generated');
         }
     } 
-    catch (error) {
-        throw new Error('Error uploading TTS file:', error); // Log the error for debugging
+    catch {
+        throw new Error('Error uploading TTS file:'); // Log the error for debugging
     }
 }

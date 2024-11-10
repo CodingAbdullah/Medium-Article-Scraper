@@ -64,7 +64,7 @@ export async function uploadFireCrawlInfo(articleURL: string, fileID: string) {
 
         return true;
     } 
-    catch (error) {
-        throw new Error(`Failed to upload to S3: ${error}`);
+    catch {
+        throw new Error('Failed to upload to S3');
     }
 }

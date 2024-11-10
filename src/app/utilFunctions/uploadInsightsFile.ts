@@ -71,7 +71,7 @@ export async function uploadInsightsFile(articleText: string, fileID: string): P
 
         return true;
     } 
-    catch (error) {
-        throw error;
+    catch {
+        throw new Error("Could not process request");
     }
 }                                                                      

@@ -30,7 +30,7 @@ export async function uploadTextFile(documentText: string): Promise<UploadTextFi
         // If successful, return true
         return [true, textFileID];
     } 
-    catch (error) {
-        throw new Error("Cannot process request: " + error)
+    catch {
+        throw new Error("Cannot process request")
     }
 }
