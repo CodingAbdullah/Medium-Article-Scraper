@@ -17,7 +17,7 @@ interface ScrapeRequestBody {
 }
 
 // Custom function for scraping
-export const scrape = async (req: Request<{}, {}, ScrapeRequestBody>, res: Response) => {
+export const scrape = async (req: Request<unknown, unknown, ScrapeRequestBody>, res: Response) => {
     const { htmlDocument, url } = req.body.body;
     
     // Incorporating the UploadURLDataType to efficiently pass back data to the client
@@ -56,7 +56,7 @@ export const scrape = async (req: Request<{}, {}, ScrapeRequestBody>, res: Respo
 }
 
 // Mock request and response types for testing
-const createMockRequest = (body: ScrapeRequestBody): Request => {
+const createMockRequest = (body: ScrapeRequestBody): Request<unknown, unknown, ScrapeRequestBody> => {
     return {
         body: body,
         // Add any other necessary properties or methods here
@@ -65,7 +65,7 @@ const createMockRequest = (body: ScrapeRequestBody): Request => {
         accepts: () => {},
         acceptsCharsets: () => {},
         // ... other methods and properties as needed
-    } as Request;
+    } as Request<unknown, unknown, ScrapeRequestBody>;
 };
 
 const createMockResponse = (): Response => {
