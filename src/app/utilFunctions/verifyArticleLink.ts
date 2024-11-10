@@ -44,18 +44,16 @@ export const verifyArticleLink = async (url: string): Promise<VerifyArticleLinkR
         articleText = filterStyleTags(articleText);
 
         // Start from the root node of the article using the <article> tag
-        const articleDOMRootNode = parser.parseFromString(articleText, 'text/html').documentElement;
+        const articleDOMRootNode: Document = parser.parseFromString(articleText, 'text/html').documentElement;
 
         // If no children exist, invalid article
         if (!articleDOMRootNode.hasChildNodes()) {
             throw new Error("Invalid article!");
-        } 
-        else {
+        } else {
             // If valid article, return the document
-            return { htmlDocument: articleDOMRootNode as Document};
+            return { htmlDocument: articleDOMRootNode }; // Ensure it's correctly typed
         }
-    } 
-    catch {
-        throw new Error('Could not process request');
+    } catch (err) {
+        throw new Error(`Could not process request: ${err instanceof Error ? err.message : String(err)}`);
     }
 };
