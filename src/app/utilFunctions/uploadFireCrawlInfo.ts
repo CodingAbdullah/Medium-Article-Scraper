@@ -1,29 +1,30 @@
 import FirecrawlApp from '@mendable/firecrawl-js';
-import AWS from 'aws-sdk';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
 // AWS Configuration (if not already configured elsewhere)
-AWS.config.update({
-    accessKeyId: process.env.ACCESS_ID!,
-    secretAccessKey: process.env.SECRET_KEY!,
-    region: process.env.REGION!
+const s3Client = new S3Client({
+    region: process.env.REGION,
+    credentials: {
+        accessKeyId: process.env.ACCESS_ID!,
+        secretAccessKey: process.env.SECRET_KEY!,
+    },
 });
 
 // Fire Crawl Data function
-// Initialize the Fire Crawl and AWS S3 bucket
+// Initialize the Fire Crawl
 export async function uploadFireCrawlInfo(articleURL: string, fileID: string) {
     const app = new FirecrawlApp({ apiKey: process.env.FIRECRAWL_API_KEY });
-    const s3 = new AWS.S3();
 
     // Scrape the page of the Medium Article URL
     const scrapeResponse = await app.scrapeUrl(articleURL, {
-        formats: ['markdown', 'html'],
+        formats: ['markdown', 'html']
     });
 
     // Crawl a website
     const crawlResponse = await app.crawlUrl(articleURL, {
         limit: 100,
         scrapeOptions: {
-            formats: ['markdown', 'html'],
+            formats: ['markdown', 'html']
         }
     });
 
@@ -32,15 +33,18 @@ export async function uploadFireCrawlInfo(articleURL: string, fileID: string) {
 
     // Throw errors based on response types
     if (!scrapeResponse.success) {
-        throw new Error(`Failed to scrape: ${scrapeResponse.error}`)
+        console.error("No scraping success");
+        throw new Error(`Failed to scrape: ${scrapeResponse.error}`);
     }
 
     if (!crawlResponse.success) {
-        throw new Error(`Failed to crawl: ${crawlResponse.error}`)
+        console.error("Failed to crawl");
+        throw new Error(`Failed to crawl: ${crawlResponse.error}`);
     }
 
     if (!mapResponse.success) {
-        throw new Error(`Failed to map: ${mapResponse.error}`)
+        console.error("Failed to map");
+        throw new Error(`Failed to map: ${mapResponse.error}`);
     }
 
     // Combine all findings and push to a text file
@@ -55,16 +59,19 @@ export async function uploadFireCrawlInfo(articleURL: string, fileID: string) {
 
     // Upload to S3
     try {
-        await s3.putObject({
+        const command = new PutObjectCommand({
             Bucket: process.env.S3_BUCKET_NAME as string,
             Key: `firecrawl-${fileID}.json`,
             Body: JSON.stringify(firecrawlData, null, 2),
             ContentType: 'application/json'
-        }).promise();
+        });
+
+        await s3Client.send(command); // Send the command to S3
 
         return true;
     } 
     catch {
+        console.error("Failed to upload firecrawl to S3");
         throw new Error('Failed to upload to S3');
     }
 }

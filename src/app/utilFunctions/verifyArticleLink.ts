@@ -49,11 +49,13 @@ export const verifyArticleLink = async (url: string): Promise<VerifyArticleLinkR
         // If no children exist, invalid article
         if (!articleDOMDocument.documentElement.hasChildNodes()) {
             throw new Error("Invalid article!");
-        } else {
+        } 
+        else {
             // If valid article, return the document
             return { htmlDocument: articleDOMDocument }; // Return the Document directly
         }
-    } catch {
+    } 
+    catch {
         throw new Error('Could not process request');
     }
 };

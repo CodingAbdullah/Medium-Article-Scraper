@@ -8,26 +8,24 @@ import { Link, FileText, AlertCircle } from 'lucide-react';
 interface UploadURLData {
     textURL: string;
     audioURL: string;
-    insightsURL?: string; // Optional
-    fireCrawlURL?: string; // Optional
-}
-
-interface ScrapeResult {
-    uploadURL: UploadURLData;
+    insightsURL: string;
+    fireCrawlURL: string;
 }
 
 // Where all the main action happens
 export default function ScraperPage() {
     const [url, setUrl] = useState('');
     const [loading, setLoading] = useState(false);
-    const [result, setResult] = useState<ScrapeResult | null>(null); // Use the defined type
+    const [result, setResult] = useState<UploadURLData | null>(null); // Initialize as null
     const [error, setError] = useState<string | null>(null);
+    const [successMessage, setSuccessMessage] = useState<string | null>(null); // New state for success message
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         setError(null);
-        setResult(null);
+        setResult(null); // Reset result state
+        setSuccessMessage(null); // Reset success message
 
         // Validate the URL
         if (new URL(url).hostname !== 'medium.com') {
@@ -46,8 +44,8 @@ export default function ScraperPage() {
                 body: JSON.stringify({ url })
             });
 
-            const data: ScrapeResult = await response.json(); // Use the defined type
-
+            const data: UploadURLData = await response.json(); // Use the defined type
+            
             // Check if the response is OK
             if (!response.ok) {
                 throw new Error('Failed to scrape article');
@@ -55,6 +53,8 @@ export default function ScraperPage() {
 
             // Set the result state with the data received
             setResult(data);
+            setSuccessMessage("Successfully extracted!"); // Set success message
+            setLoading(false);
         } 
         catch (error) {
             setError(error instanceof Error ? error.message : 'Something went wrong');
@@ -77,6 +77,11 @@ export default function ScraperPage() {
                 </div>
 
                 <div className="mt-10 bg-white shadow-xl rounded-lg p-6 sm:p-10">
+                    {successMessage && (
+                        <div className="mb-6 bg-green-50 border border-green-200 text-green-600 rounded-md p-4">
+                            {successMessage}
+                        </div>
+                    )}
                     {error && (
                         <div className="mb-6 bg-red-50 border border-red-200 rounded-md p-4 flex items-center space-x-2">
                             <AlertCircle className="h-5 w-5 text-red-500" />
@@ -108,53 +113,57 @@ export default function ScraperPage() {
                         <button 
                             type="submit" 
                             className="w-full flex items-center justify-center text-lg h-14 bg-gray-900 hover:bg-gray-800 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-                            disabled={loading || !url || !!error}
+                            disabled={loading || !url || !!error || successMessage !== null}
                         >
                             <FileText className="w-6 h-6 mr-2" />
                             {loading && !error ? 'Extracting...' : 'Extract Article'}
                         </button>
                     </form>
-
-                    {result && (
+                    
+                    {result && result.textURL !== '' && !loading ? ( // Check if result is not null
                         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             <div className="bg-white shadow-md rounded-lg p-4">
                                 <h6 className="font-medium text-gray-900">Download Text File</h6>
-                                <a href={result.uploadURL.textURL} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                                <a href={result.textURL} download className="text-black" target='_blank'>
                                     <FileText className="inline h-5 w-5 mr-1" />
                                     Download
                                 </a>
                             </div>
                             <div className="bg-white shadow-md rounded-lg p-4">
                                 <h6 className="font-medium text-gray-900">Download Audio File</h6>
-                                <a href={result.uploadURL.audioURL} target="_blank" rel="noopener noreferrer" className="text-blue-500">
-                                    <FileText className="inline h-5 w-5 mr-1" />
-                                    Download
-                                </a>
-                            </div>
-                            <div className="bg-white shadow-md rounded-lg p-4">
-                                <h6 className="font-medium text-gray-900">Download Insights File</h6>
-                                {result.uploadURL.insightsURL ? (
-                                    <a href={result.uploadURL.insightsURL} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                                {result.audioURL !== '' ? (
+                                    <a href={result.audioURL} download className="text-black" target='_blank'>
                                         <FileText className="inline h-5 w-5 mr-1" />
                                         Download
                                     </a>
                                 ) : (
-                                    <p>No insights available</p>
+                                    <p style={{ marginTop: '1rem' }}>No Audio File available</p>
+                                )}
+                            </div>
+                            <div className="bg-white shadow-md rounded-lg p-4">
+                                <h6 className="font-medium text-gray-900">Download Insights File</h6>
+                                {result.insightsURL !== '' ? (
+                                    <a href={result.insightsURL} download className="text-black" target='_blank'>
+                                        <FileText className="inline h-5 w-5 mr-1" />
+                                        Download
+                                    </a>
+                                ) : (
+                                    <p style={{ marginTop: '1rem' }}>No Insights available</p>
                                 )}
                             </div>
                             <div className="bg-white shadow-md rounded-lg p-4">
                                 <h6 className="font-medium text-gray-900">Download Fire Crawl File</h6>
-                                {result.uploadURL.fireCrawlURL ? (
-                                    <a href={result.uploadURL.fireCrawlURL} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                                {result.fireCrawlURL !== '' ? (
+                                    <a href={result.fireCrawlURL} download className="text-black" target='_blank'>
                                         <FileText className="inline h-5 w-5 mr-1" />
                                         Download
                                     </a>
                                 ) : (
-                                    <p>No fire crawl data available</p>
+                                    <p style={{ marginTop: '1rem' }}>No Fire Crawl Data available</p>
                                 )}
                             </div>
                         </div>
-                    )}
+                    ) : null }
                 </div>
             </div>
         </div>

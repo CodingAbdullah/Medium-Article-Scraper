@@ -1,36 +1,47 @@
 // src/app/utilFunctions/uploadTextFile.ts
 import { v4 } from "uuid";
-import * as AWS from 'aws-sdk';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 
-// Setting Global Configurations for AWS to be used by all services
-AWS.config.update({
-    accessKeyId: process.env.ACCESS_ID!,
-    secretAccessKey: process.env.SECRET_KEY!,
-    region: process.env.REGION!
+// Create an S3 client
+const s3Client = new S3Client({
+    region: process.env.REGION,
+    credentials: {
+        accessKeyId: process.env.ACCESS_ID!,
+        secretAccessKey: process.env.SECRET_KEY!
+    },
 });
 
 // Define a type for the return value of the uploadTextFile function
 type UploadTextFileResult = [boolean, string];
 
 export async function uploadTextFile(documentText: string): Promise<UploadTextFileResult> {
-    // Initiating S3 Bucket using configuration
-    const S3Bucket = new AWS.S3();
+    // Check if required environment variables are set
+    if (!process.env.S3_BUCKET_NAME) {
+        console.error("S3_BUCKET_NAME environment variable is not set.");
+        throw new Error("S3_BUCKET_NAME environment variable is not set.");
+    }
 
     try {
         // Generating a random ID identifier for text file
         const textFileID = v4().split("-")[0]; // Use const since textFileID is not reassigned
 
-        // Initiating S3 Bucket and sending a PutObject command
-        await S3Bucket.putObject({
+        // Creating the PutObjectCommand
+        const command = new PutObjectCommand({
             Bucket: process.env.S3_BUCKET_NAME!,
             Key: 'Medium-Article-' + textFileID + '.txt',
-            Body: documentText
-        }).promise(); // Use promise() to handle the async operation
+            Body: documentText,
+            ContentType: 'text/plain' // Specify content type
+        });
 
+        // Sending the command to S3
+        await s3Client.send(command);
+
+        console.log('successful');
         // If successful, return true
         return [true, textFileID];
     } 
-    catch {
-        throw new Error("Cannot process request")
+    catch { // Improved error handling
+        console.error("Cannot process request");
+        throw new Error('Cannot process request');
     }
 }

@@ -22,19 +22,30 @@ export async function POST(req: NextRequest) {
         const fileText = generateArticleText(verifiedInformation.htmlDocument);
         const punctuationInsertedText = insertPunctuation(fileText);
 
+        // Upload files in parallel
         const textFileUploadStatus = await uploadTextFile(punctuationInsertedText);
-        const audioFileUploadStatus = await uploadTTSFile(punctuationInsertedText, textFileUploadStatus[1]);
-        const insightsFileUploadStatus = await uploadInsightsFile(punctuationInsertedText, textFileUploadStatus[1]);
-        const uploadFireCrawlInfoStatus = await uploadFireCrawlInfo(url, textFileUploadStatus[1]);
+        if (!textFileUploadStatus || !textFileUploadStatus[1]) {
+            throw new Error('Text file upload failed');
+        }
+        else {
+            uploadURL.textURL = constructS3Url(`Medium-Article-${textFileUploadStatus[1]}`, 'txt');
+        }
 
+        const [audioFileUploadStatus, insightsFileUploadStatus, uploadFireCrawlInfoStatus] = await Promise.all([
+            uploadTTSFile(punctuationInsertedText, textFileUploadStatus[1]),
+            uploadInsightsFile(punctuationInsertedText, textFileUploadStatus[1]),
+            uploadFireCrawlInfo(url, textFileUploadStatus[1])
+        ]);
+
+        // Construct URLs
         uploadURL.textURL = constructS3Url(`Medium-Article-${textFileUploadStatus[1]}`, 'txt');
-        uploadURL.audioURL = constructS3Url(`Medium-Article-${audioFileUploadStatus[1]}`, 'mp3');
+        uploadURL.audioURL = audioFileUploadStatus ? constructS3Url(`Medium-Article-${audioFileUploadStatus[1]}`, 'mp3') : '';
         uploadURL.insightsURL = insightsFileUploadStatus ? constructS3Url(`Medium-Article-insights-${textFileUploadStatus[1]}`, 'txt') : '';
         uploadURL.fireCrawlURL = uploadFireCrawlInfoStatus ? constructS3Url(`Medium-Article-firecrawl-${textFileUploadStatus[1]}`, 'json') : '';
 
         return NextResponse.json(uploadURL); // Return a JSON response
     } 
     catch {
-        return NextResponse.error(); // Return an error response
+        return NextResponse.json({ error: 'An error occurred while processing your request.' }, { status: 500 }); // Return an error response
     }
 }

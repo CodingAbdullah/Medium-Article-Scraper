@@ -1,51 +1,68 @@
-// src/app/utilFunctions/uploadTTSFile.ts
-import * as AWS from 'aws-sdk';
+import { PollyClient, StartSpeechSynthesisTaskCommand, GetSpeechSynthesisTaskCommand } from '@aws-sdk/client-polly';
 import { PollyVoice } from '../dataTypes/PollyVoiceType';
 
-// Setting Global Configurations for AWS to be used by all services
-AWS.config.update({
-    accessKeyId: process.env.ACCESS_ID!,
-    secretAccessKey: process.env.SECRET_KEY!,
-    region: process.env.REGION!
+const pollyClient = new PollyClient({
+    region: process.env.REGION,
+    credentials: {
+        accessKeyId: process.env.ACCESS_ID!,
+        secretAccessKey: process.env.SECRET_KEY!,
+    },
 });
 
 // Define a type for the return value of the uploadTTSFile function
 type UploadTTSFileResult = [boolean, string | null];
 
 export async function uploadTTSFile(documentText: string, audioFileID: string): Promise<UploadTTSFileResult> {    
-    try {
-        const S3Bucket = new AWS.S3(); // Initialize an AWS S3 Bucket
-        const polly = new AWS.Polly(); // Initialize an AWS Polly instance
+    const MAX_TEXT_LENGTH_ASYNC = 50000;  // For asynchronous calls
 
-        // Configure Polly parameters
-        const pollyParams = {
-            Engine: 'neural',
-            LanguageCode: 'en-US',
-            OutputFormat: 'mp3',
-            Text: documentText,
-            TextType: 'text',
-            VoiceId: PollyVoice.MATTHEW // Using the Matthew voice type
-        };
+    if (documentText.length <= MAX_TEXT_LENGTH_ASYNC) {
+        try {
+            // Configure Polly parameters
+            const pollyParams = {
+                Engine: 'neural' as const,
+                LanguageCode: 'en-US' as const,
+                OutputFormat: 'mp3' as const,
+                Text: documentText,
+                TextType: 'text' as const,
+                VoiceId: PollyVoice.MATTHEW,
+                OutputS3BucketName: process.env.S3_BUCKET_NAME!, // Specify the S3 bucket for output
+                OutputS3KeyPrefix: `Medium-Article-${audioFileID}`, // Prefix for the output file
+            };
 
-        // Generate audio using AWS Polly
-        const audioData = await polly.synthesizeSpeech(pollyParams).promise();
+            // Start the speech synthesis task
+            const synthesizeSpeechCommand = new StartSpeechSynthesisTaskCommand(pollyParams);
+            const taskResponse = await pollyClient.send(synthesizeSpeechCommand);
+            const taskId = taskResponse.SynthesisTask?.TaskId;
 
-        if (audioData.AudioStream) {
-            // Upload to S3
-            await S3Bucket.putObject({
-                Bucket: process.env.S3_BUCKET_NAME!,
-                Key: `Medium-Article-${audioFileID}.mp3`,
-                Body: audioData.AudioStream,
-                ContentType: 'audio/mpeg'
-            }).promise();
+            if (!taskId) {
+                throw new Error('Failed to start speech synthesis task');
+            }
 
-            return [true, audioFileID];
+            // Poll for the task status
+            let taskStatus;
+            do {
+                await new Promise(resolve => setTimeout(resolve, 5000)); // Wait for 5 seconds before polling again
+                const getTaskCommand = new GetSpeechSynthesisTaskCommand({ TaskId: taskId });
+                const taskResult = await pollyClient.send(getTaskCommand);
+                taskStatus = taskResult.SynthesisTask?.TaskStatus;
+
+                if (taskStatus === 'completed') {
+                    // The audio file is ready in S3
+                    return [true, audioFileID];
+                } 
+                else if (taskStatus === 'failed') {
+                    throw new Error('Speech synthesis task failed');
+                }
+            } while (taskStatus === 'inProgress');
+
+            return [false, audioFileID]; // If the task is not completed or failed
         } 
-        else {
-            throw new Error('No audio stream generated');
+        catch (err) {
+            console.error('Error uploading TTS file:', err);
+            throw new Error('Error uploading TTS file'); // Log the error for debugging
         }
     } 
-    catch {
-        throw new Error('Error uploading TTS file:'); // Log the error for debugging
+    else {
+        return [false, audioFileID]; // Text too long for synthesis
     }
 }
