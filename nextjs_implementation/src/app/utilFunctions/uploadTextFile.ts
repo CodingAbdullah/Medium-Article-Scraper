@@ -22,7 +22,7 @@ export async function uploadTextFile(documentText: string): Promise<any[]> {
 
         // Initiating S3 Bucket and sending a PutObject command
         await S3Bucket.putObject({
-            Bucket: process.env.AWS_S3_BUCKET_NAME!,
+            Bucket: process.env.S3_BUCKET_NAME!,
             Key: 'Medium-Article-' + textFileID + '.txt',
             Body: documentText
         }, (err, data) => {

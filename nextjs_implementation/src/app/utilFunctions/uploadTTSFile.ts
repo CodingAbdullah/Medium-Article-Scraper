@@ -31,7 +31,7 @@ export async function uploadTTSFile(documentText: string, audioFileID: string): 
         if (audioData.AudioStream) {
             // Upload to S3
             await S3Bucket.putObject({
-                Bucket: process.env.AWS_S3_BUCKET_NAME!,
+                Bucket: process.env.S3_BUCKET_NAME!,
                 Key: `Medium-Article-${audioFileID}.mp3`,
                 Body: audioData.AudioStream,
                 ContentType: 'audio/mpeg'

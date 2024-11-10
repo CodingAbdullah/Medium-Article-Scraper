@@ -63,7 +63,7 @@ export async function uploadInsightsFile(articleText: string, fileID: string): P
 
         // Insert insights file into AWS S3 Bucket
         await s3.putObject({
-            Bucket: process.env.AWS_BUCKET_NAME!,
+            Bucket: process.env.S3_BUCKET_NAME!,
             Key: `insights-${fileID}.txt`,
             Body: formattedContent,
             ContentType: 'text/plain'

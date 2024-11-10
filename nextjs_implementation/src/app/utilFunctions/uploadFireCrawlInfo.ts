@@ -56,7 +56,7 @@ export async function uploadFireCrawlInfo(articleURL: string, fileID: string) {
     // Upload to S3
     try {
         await s3.putObject({
-            Bucket: process.env.AWS_S3_BUCKET_NAME as string,
+            Bucket: process.env.S3_BUCKET_NAME as string,
             Key: `firecrawl-${fileID}.json`,
             Body: JSON.stringify(firecrawlData, null, 2),
             ContentType: 'application/json'
