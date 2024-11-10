@@ -14,7 +14,7 @@ const constructS3Url = (fileName: string, extension: string) =>
 
 // POST request for working with scraping data
 export async function POST(req: NextRequest) {
-    const { url } = JSON.parse(req!.body!.body);
+    const { url } = await req.json(); // Correctly access the parsed JSON body
     const uploadURL: UploadURLDataType = { textURL: '', audioURL: '', insightsURL: '', fireCrawlURL: '' };
 
     try {
