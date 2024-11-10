@@ -10,7 +10,7 @@ AWS.config.update({
 });
 
 // Define a type for the return value of the uploadTextFile function
-type UploadTextFileResult = [boolean, string | null];
+type UploadTextFileResult = [boolean, string];
 
 export async function uploadTextFile(documentText: string): Promise<UploadTextFileResult> {
     // Initiating S3 Bucket using configuration
@@ -31,7 +31,6 @@ export async function uploadTextFile(documentText: string): Promise<UploadTextFi
         return [true, textFileID];
     } 
     catch (error) {
-        console.error('Error uploading text file:', error); // Log the error for debugging
-        return [false, null]; // Return false and null for textFileID
+        throw new Error("Cannot process request: " + error)
     }
 }

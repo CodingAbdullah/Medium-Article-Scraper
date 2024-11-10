@@ -46,7 +46,6 @@ export async function uploadTTSFile(documentText: string, audioFileID: string): 
         }
     } 
     catch (error) {
-        console.error('Error uploading TTS file:', error); // Log the error for debugging
-        return [false, null]; // Return false and null for audioFileID
+        throw new Error('Error uploading TTS file:', error); // Log the error for debugging
     }
 }
