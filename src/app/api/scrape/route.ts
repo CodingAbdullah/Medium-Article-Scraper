@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
 
         return NextResponse.json(uploadURL); // Return a JSON response
     } 
-    catch (error) {
+    catch {
         return NextResponse.error(); // Return an error response
     }
 }
