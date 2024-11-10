@@ -50,7 +50,7 @@ export default function ScraperPage() {
 
             // Check if the response is OK
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to scrape article');
+                throw new Error('Failed to scrape article');
             }
 
             // Set the result state with the data received
