@@ -1,68 +1,40 @@
-// src/app/api/scrape/route.ts
-import { NextRequest, NextResponse } from 'next/server';
-import { verifyArticleLink } from '../../middleware/verifyArticleLink';
-import { scrape } from '../../utilFunctions/scrape';
+import { NextRequest, NextResponse } from 'next/server'; // Add this import
+import { uploadTextFile } from "../../utilFunctions/uploadTextFile";
+import { uploadTTSFile } from "../../utilFunctions/uploadTTSFile";
+import { uploadInsightsFile } from '../../utilFunctions/uploadInsightsFile';
+import { uploadFireCrawlInfo } from '../../utilFunctions/uploadFireCrawlInfo';
+import UploadURLDataType from "../../dataTypes/UploadURLDataType";
+import generateArticleText from "../../utilFunctions/generateArticleText";
+import insertPunctuation from "../../utilFunctions/insertPunctuation";
+import { verifyArticleLink } from "../../utilFunctions/verifyArticleLink";
 
-// Define a type for the mock response
-interface MockResponse {
-    statusCode: number;
-    data?: unknown; // Use 'unknown' instead of 'any' for better type safety
-    status: (code: number) => MockResponse;
-    json: (data: unknown) => MockResponse;
-}
-
-// Define a type for the expected result from the scrape function
-interface ScrapeResult {
-    uploadURL: {
-        textURL: string;
-        audioURL: string;
-        insightsURL?: string; // Optional
-        fireCrawlURL?: string; // Optional
-    };
-}
+// Helper function to construct S3 URLs
+const constructS3Url = (fileName: string, extension: string) => 
+    `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.REGION}.amazonaws.com/${fileName}.${extension}`;
 
 // POST request for working with scraping data
 export async function POST(req: NextRequest) {
+    const { url } = JSON.parse(req!.body!.body);
+    const uploadURL: UploadURLDataType = { textURL: '', audioURL: '', insightsURL: '', fireCrawlURL: '' };
+
     try {
-        const body = await req.json();
-        const mockReq: { body: { body: string } } = {
-            body: { body: JSON.stringify(body) }
-        };
+        const verifiedInformation = await verifyArticleLink(url);
+        const fileText = generateArticleText(verifiedInformation.htmlDocument);
+        const punctuationInsertedText = insertPunctuation(fileText);
 
-        const mockRes: MockResponse = {
-            statusCode: 200,
-            status(code: number) {
-                this.statusCode = code;
-                return this;
-            },
-            json(data: unknown) {
-                this.data = data;
-                return this;
-            }
-        };
+        const textFileUploadStatus = await uploadTextFile(punctuationInsertedText);
+        const audioFileUploadStatus = await uploadTTSFile(punctuationInsertedText, textFileUploadStatus[1]);
+        const insightsFileUploadStatus = await uploadInsightsFile(punctuationInsertedText, textFileUploadStatus[1]);
+        const uploadFireCrawlInfoStatus = await uploadFireCrawlInfo(url, textFileUploadStatus[1]);
 
-        // Call the middleware to verify the article link
-        await new Promise<void>((resolve, reject) => {
-            verifyArticleLink(mockReq, mockRes, (error?: Error) => {
-                if (error) reject(error); // Reject if there's an error
-                if (mockRes.statusCode === 400) reject(mockRes.data); // Reject if status is 400
-                resolve(); // Resolve if everything is fine
-            });
-        });
+        uploadURL.textURL = constructS3Url(`Medium-Article-${textFileUploadStatus[1]}`, 'txt');
+        uploadURL.audioURL = constructS3Url(`Medium-Article-${audioFileUploadStatus[1]}`, 'mp3');
+        uploadURL.insightsURL = insightsFileUploadStatus ? constructS3Url(`Medium-Article-insights-${textFileUploadStatus[1]}`, 'txt') : '';
+        uploadURL.fireCrawlURL = uploadFireCrawlInfoStatus ? constructS3Url(`Medium-Article-firecrawl-${textFileUploadStatus[1]}`, 'json') : '';
 
-        // If middleware passes, process the scrape
-        const result = await new Promise<ScrapeResult>((resolve, reject) => {
-            scrape(mockReq, mockRes);
-            if (mockRes.statusCode === 400) reject(mockRes.data); // Reject if scrape fails
-            resolve(mockRes.data as ScrapeResult); // Resolve with the scrape result
-        });
-
-        return NextResponse.json(result, { status: 201 }); // Return success response
+        return NextResponse.json(uploadURL); // Return a JSON response
     } 
-    catch (error: unknown) {
-        return NextResponse.json(
-            { error: (error as Error).message || 'Failed to process article' }, // Return error message
-            { status: 400 } // Set status to 400 for errors
-        );
+    catch (error) {
+        return NextResponse.error(); // Return an error response
     }
 }

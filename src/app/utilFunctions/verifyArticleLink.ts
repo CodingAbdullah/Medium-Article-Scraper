@@ -1,16 +1,18 @@
-import { Request, Response, NextFunction } from 'express';
 import axios from 'axios';
 import { DOMParser } from 'xmldom';
-import filterMediaTags from '../utilFunctions/filterMediaTags';
-import filterStyleTags from '../utilFunctions/filterStyleTags';
+import filterMediaTags from './filterMediaTags';
+import filterStyleTags from './filterStyleTags';
 
-// Middleware function for verifying article links
-export const verifyArticleLink = async (req: Request, res: Response, next: NextFunction) => {
-    const { url } = JSON.parse(req.body.body);
+// Define a type for the return value
+interface VerifyArticleLinkResult {
+    htmlDocument: Document; // Assuming you want to return a DOM Document
+}
 
+// Function for verifying article links
+export const verifyArticleLink = async (url: string): Promise<VerifyArticleLinkResult> => {
     // Check if the URL is from Medium
     if (!url || new URL(url).hostname !== 'medium.com') {
-        return res.status(400).json({ error: 'Invalid Medium article URL' }); // Return error response
+        throw new Error("Invalid Article link");
     }
 
     const parser = new DOMParser(); // Initiate parser
@@ -30,12 +32,11 @@ export const verifyArticleLink = async (req: Request, res: Response, next: NextF
     };
 
     try {
-        // Run check to see if article link matches Medium.com domain
-        // If so, make request to fetch HTML document from requested article URL
+        // Make request to fetch HTML document from requested article URL
         const response = await axios.request(options);
         const articleDOM = String(response.data);
 
-        // Extract the content within the <article></article> tags that is where the article begins
+        // Extract the content within the <article></article> tags
         let articleText = articleDOM.substring(articleDOM.indexOf('<article>'), articleDOM.indexOf('</article>')) + '</article>';
 
         // Filter out media and style tags from article
@@ -46,20 +47,15 @@ export const verifyArticleLink = async (req: Request, res: Response, next: NextF
         const articleDOMRootNode = parser.parseFromString(articleText, 'text/html').documentElement;
 
         // If no children exist, invalid article
-        // Return status 400 as response
         if (!articleDOMRootNode.hasChildNodes()) {
-            return res.status(400).json({ error: 'Invalid article content' });
+            throw new Error("Invalid article!");
         } 
         else {
-            // If valid article, pass control to next function
-            // Attach document to request body and proceed
-            req.body.body = { htmlDocument: articleDOMRootNode, url };
-            next();
+            // If valid article, return the document
+            return { htmlDocument: articleDOMRootNode };
         }
     } 
     catch (err) {
-        res.status(400).json({
-            message: "Could not process request at this time. ERROR: " + err
-        });
+        throw new Error(`Could not process request: ${err}`);
     }
 };
