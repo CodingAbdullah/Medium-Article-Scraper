@@ -1,3 +1,4 @@
+// src/app/utilFunctions/uploadTTSFile.ts
 import * as AWS from 'aws-sdk';
 import { PollyVoice } from '../dataTypes/PollyVoiceType';
 
@@ -8,9 +9,10 @@ AWS.config.update({
     region: process.env.REGION!
 });
 
-// Generate an audio stream from text and then upload it as an .mp3 file to AWS S3
-// AWS Polly is a cloud TTS service
-export async function uploadTTSFile(documentText: string, audioFileID: string): Promise<any[]> {    
+// Define a type for the return value of the uploadTTSFile function
+type UploadTTSFileResult = [boolean, string | null];
+
+export async function uploadTTSFile(documentText: string, audioFileID: string): Promise<UploadTTSFileResult> {    
     try {
         const S3Bucket = new AWS.S3(); // Initialize an AWS S3 Bucket
         const polly = new AWS.Polly(); // Initialize an AWS Polly instance
@@ -43,7 +45,8 @@ export async function uploadTTSFile(documentText: string, audioFileID: string): 
             throw new Error('No audio stream generated');
         }
     } 
-    catch (err) {
-        return [false];
+    catch (error) {
+        console.error('Error uploading TTS file:', error); // Log the error for debugging
+        return [false, null]; // Return false and null for audioFileID
     }
 }

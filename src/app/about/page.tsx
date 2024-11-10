@@ -1,132 +1,150 @@
+// src/app/tool/page.tsx
 'use client'
 
-import { useState } from 'react'
-import { InfoIcon, Code2Icon, BookOpenIcon } from 'lucide-react'
+import { useState } from 'react';
+import { Link, FileText, AlertCircle } from 'lucide-react';
 
-export default function AboutPage() {
-  const [activeTab, setActiveTab] = useState('about')
+// Where all the main action happens
+export default function ScraperPage() {
+    const [url, setUrl] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [result, setResult] = useState<any>(null);
+    const [error, setError] = useState<string | null>(null);
 
-  return (
-    <div className="container mx-auto max-w-4xl py-8 px-4">
-      <h1 className="text-4xl font-bold mb-8 text-center">Learn More!</h1>
-      <div className="mb-6">
-        <div className="flex border-b">
-          <button
-            className={`flex items-center px-4 py-2 ${activeTab === 'about' ? 'border-b-2 border-black text-black' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('about')}
-          >
-            <InfoIcon className="mr-2 h-5 w-5" />
-            About
-          </button>
-          <button
-            className={`flex items-center px-4 py-2 ${activeTab === 'implementation' ? 'border-b-2 border-black text-black' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('implementation')}
-          >
-            <Code2Icon className="mr-2 h-5 w-5" />
-            Implementation
-          </button>
-          <button
-            className={`flex items-center px-4 py-2 ${activeTab === 'resources' ? 'border-b-2 border-black text-black' : 'text-gray-500'}`}
-            onClick={() => setActiveTab('resources')}
-          >
-            <BookOpenIcon className="mr-2 h-5 w-5" />
-            Resources
-          </button>
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+        setResult(null);
+
+        // Validate the URL
+        if (new URL(url).hostname !== 'medium.com') {
+            setError("Invalid URL! Refresh and try again!");
+            setLoading(false);
+            return;
+        }
+
+        try {
+            // Send POST request to the API
+            const response = await fetch('/api/scrape', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ url })
+            });
+
+            const data = await response.json();
+
+            // Check if the response is OK
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to scrape article');
+            }
+
+            // Set the result state with the data received
+            setResult(data);
+        } 
+        catch (error) {
+            setError(error instanceof Error ? error.message : 'Something went wrong');
+        } 
+        finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-gradient-to-b from-gray-100 to-white flex items-center justify-center p-4">
+            <div className="max-w-3xl w-full space-y-8">
+                <div className="text-center">
+                    <h5 className="text-4xl font-extrabold text-gray-900 sm:text-4xl md:text-4xl">
+                        Scraper Tool
+                    </h5>
+                    <p className="mt-3 text-2xl text-gray-500 sm:mt-5 sm:text-2xl">
+                        Extract away!
+                    </p>
+                </div>
+
+                <div className="mt-10 bg-white shadow-xl rounded-lg p-6 sm:p-10">
+                    {error && (
+                        <div className="mb-6 bg-red-50 border border-red-200 rounded-md p-4 flex items-center space-x-2">
+                            <AlertCircle className="h-5 w-5 text-red-500" />
+                            <p className="text-red-600">{error}</p>
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="space-y-2">
+                            <label htmlFor="url-input" className="text-lg font-medium text-gray-700">
+                                Medium Article URL
+                            </label>
+                            <div className="flex">
+                                <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
+                                    <Link className="h-5 w-5" />
+                                </span>
+                                <input
+                                    id="url-input"
+                                    disabled={loading || !!error}
+                                    type="url"
+                                    placeholder="https://medium.com/..."
+                                    value={url}
+                                    onChange={(e) => setUrl(e.target.value)}
+                                    required
+                                    className="flex-1 rounded-none rounded-r-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                />
+                            </div>
+                        </div>
+                        <button 
+                            type="submit" 
+                            className="w-full flex items-center justify-center text-lg h-14 bg-gray-900 hover:bg-gray-800 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+                            disabled={loading || !url || !!error}
+                        >
+                            <FileText className="w-6 h-6 mr-2" />
+                            {loading && !error ? 'Extracting...' : 'Extract Article'}
+                        </button>
+                    </form>
+
+                    {result && (
+                        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div className="bg-white shadow-md rounded-lg p-4">
+                                <h6 className="font-medium text-gray-900">Download Text File</h6>
+                                <a href={result.uploadURL.textURL} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                                    <FileText className="inline h-5 w-5 mr-1" />
+                                    Download
+                                </a>
+                            </div>
+                            <div className="bg-white shadow-md rounded-lg p-4">
+                                <h6 className="font-medium text-gray-900">Download Audio File</h6>
+                                <a href={result.uploadURL.audioURL} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                                    <FileText className="inline h-5 w-5 mr-1" />
+                                    Download
+                                </a>
+                            </div>
+                            <div className="bg-white shadow-md rounded-lg p-4">
+                                <h6 className="font-medium text-gray-900">Download Insights File</h6>
+                                {result.uploadURL.insightsURL ? (
+                                    <a href={result.uploadURL.insightsURL} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                                        <FileText className="inline h-5 w-5 mr-1" />
+                                        Download
+                                    </a>
+                                ) : (
+                                    <p>No insights available</p>
+                                )}
+                            </div>
+                            <div className="bg-white shadow-md rounded-lg p-4">
+                                <h6 className="font-medium text-gray-900">Download Fire Crawl File</h6>
+                                {result.uploadURL.fireCrawlURL ? (
+                                    <a href={result.uploadURL.fireCrawlURL} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+                                        <FileText className="inline h-5 w-5 mr-1" />
+                                        Download
+                                    </a>
+                                ) : (
+                                    <p>No fire crawl data available</p>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            </div>
         </div>
-      </div>
-
-      <div className="bg-white shadow-md rounded-lg p-6">
-        {
-            activeTab === 'about' && (
-            <div>
-                <h2 className="text-2xl font-semibold mb-4 flex items-center">
-                    <InfoIcon className="mr-2 h-6 w-6 text-black" />
-                    About The Scraper
-                </h2>
-                <p className="mb-4">
-                Medium.com provides a built-in audio listener which can translate an article's text to speech. However, it does not provide any mechanism for downloading the audible and nor does it provide the user with the ability to read a plain text file. 
-                <br /> This tool hopes to bridge that gap by allowing users to seamlessly enter a valid non-paywall article link and have an audio file readily available at their disposal.</p>
-                <p className="mb-4">Key features of the scraper include:</p>
-                <ul className="list-disc pl-6 space-y-2 mb-4">
-                    <li>Fast and accurate content extraction</li>
-                    <li>Supports multiple forms of output (text audio, markdown, etc.)</li>
-                    <li>Gather article insights</li>
-                    <li>User-friendly interface</li>
-                    <li>Respect for Medium.com robots.txt and ethical scraping practices</li>
-                </ul>
-            </div>
-        )}
-        {
-            activeTab === 'implementation' && (
-            <div>
-                <h2 className="text-2xl font-semibold mb-4 flex items-center">
-                    <Code2Icon className="mr-2 h-6 w-6 text-black" />
-                    Implementation Details
-                </h2>
-                <p className="mb-4">
-                    This tool was built using modern web technologies to ensure reliability, speed, and ease of use. Here's an overview of the implementation:
-                </p>
-                <ul className="list-disc pl-6 space-y-2 mb-4">
-                    <li>
-                        <strong>Frontend:</strong> Built using Next.js and React, providing a smooth and responsive user interface
-                    </li>
-                    <li>
-                        <strong>Backend:</strong> Utilizes Next.js API routes for server-side logic and data processing
-                    </li>
-                    <li>
-                        <strong>Scraping API:</strong> Implements a custom scraping solution using a Web Scraper API
-                    </li>
-                    <li>
-                        <strong>Data Cleaning:</strong> Applies sophisticated algorithms to clean and format the extracted content
-                    </li>
-                    <li>
-                        <strong>Formatting and Output:</strong> Finally, the data is outputted in the form of audio, text, and markdown files.
-                    </li>
-                </ul>
-            </div>
-        )}
-        {
-            activeTab === 'resources' && (
-            <div>
-                <h2 className="text-2xl font-semibold mb-4 flex items-center">
-                    <BookOpenIcon className="mr-2 h-6 w-6 text-black" />
-                    Resources
-                </h2>
-                <ul className="space-y-4">
-                    <li>
-                        <strong className="block">GitHub Repository</strong>
-                        <a href="https://github.com/CodingAbdullah/Medium-Article-Scraper" className="text-black hover:underline" target="_blank" rel="noopener noreferrer">
-                            <u>- Official Code Repository</u>
-                        </a>
-                    </li>
-                    <li>
-                        <strong className="block">Medium's Terms of Service</strong>
-                        <a href="https://policy.medium.com/medium-terms-of-service-9db0094a1e0f" className="text-black hover:underline" target="_blank" rel="noopener noreferrer">
-                        <u>- Read Terms of Service</u>
-                        </a>
-                    </li>
-                    <li>
-                        <strong className="block">Web Scraping Best Practices</strong>
-                        <a href="https://www.zyte.com/learn/web-scraping-best-practices/" className="text-black hover:underline" target="_blank" rel="noopener noreferrer">
-                        <u>- Guide to Best Practices</u>
-                        </a>
-                    </li>
-                    <li>
-                        <strong className="block">Next.js Documentation</strong>
-                        <a href="https://nextjs.org/docs" className="text-black hover:underline" target="_blank" rel="noopener noreferrer">
-                        <u>- Learn More about Next.js</u>
-                        </a>
-                    </li>
-                    <li>
-                        <strong className="block">React Documentation</strong>
-                        <a href="https://reactjs.org/docs/getting-started.html" className="text-black hover:underline" target="_blank" rel="noopener noreferrer">
-                        <u>- Learn More about React.js</u>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        )}
-      </div>
-    </div>
-  )
+    );
 }

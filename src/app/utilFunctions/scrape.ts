@@ -12,21 +12,21 @@ export const scrape = async (req: Request, res: Response) => {
     const { htmlDocument, url } = req.body.body;
     
     // Incorporating the UploadURLDataType to efficiently pass back data to the client
-    let uploadURL: UploadURLDataType = { textURL: '', audioURL: '', insightsURL: '', fireCrawlURL: '' };
+    const uploadURL: UploadURLDataType = { textURL: '', audioURL: '', insightsURL: '', fireCrawlURL: '' };
 
     // Start text concatenation process using NodeList and recursion with generateArticleText
-    let fileText = generateArticleText(htmlDocument);
+    const fileText = generateArticleText(htmlDocument);
           
     // Add punctuation to the article text where appropriate using the insertPunctuation function
     // Return the final formatted string to be written to text file
-    let punctuationInsertedText = insertPunctuation(fileText);
+    const punctuationInsertedText = insertPunctuation(fileText);
 
     try {
         // Proceed with creating the text and audio files
-        let textFileUploadStatus = await uploadTextFile(punctuationInsertedText);
-        let audioFileUploadStatus = await uploadTTSFile(punctuationInsertedText, textFileUploadStatus[1]);
-        let insightsFileUploadStatus = await uploadInsightsFile(punctuationInsertedText, textFileUploadStatus[1]);
-        let uploadFireCrawlInfoStatus = await uploadFireCrawlInfo(url, textFileUploadStatus[1]);
+        const textFileUploadStatus = await uploadTextFile(punctuationInsertedText);
+        const audioFileUploadStatus = await uploadTTSFile(punctuationInsertedText, textFileUploadStatus[1]);
+        const insightsFileUploadStatus = await uploadInsightsFile(punctuationInsertedText, textFileUploadStatus[1]);
+        const uploadFireCrawlInfoStatus = await uploadFireCrawlInfo(url, textFileUploadStatus[1]);
         
         // Status equates to 0 as the request processes as is
         // Conditionally assign values to the insights and fire crawl URLs
@@ -42,7 +42,7 @@ export const scrape = async (req: Request, res: Response) => {
     }
     catch (error) {
         res.status(400).json({
-            message: "Could not create/upload the requested files"
+            message: "Could not create/upload the requested files: " + error
         });
     }
 }

@@ -4,7 +4,7 @@
 // We recursively loop through the Article DOM removing each tagName occurrance
 // Assign filtered string to original and run check again
 export default function filterMediaTags(tagName: Array<string>, htmlString: string, shiftIndex: Array<number>) : string {
-    for (var i = 0; i < tagName.length; i++) {
+    for (let i = 0; i < tagName.length; i++) {
       while (htmlString.includes('</' + tagName[i] + '>')) {
         let filteredString = htmlString.substring(0, htmlString.indexOf('<' + tagName[i]))
         + htmlString.substring(htmlString.indexOf('</' + tagName[i] + '>') + shiftIndex[i]);

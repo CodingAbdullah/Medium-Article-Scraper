@@ -9,7 +9,7 @@ export default class PunctuationQueue {
 
     // Pop the most oldest punctuation from the back and return it 
     pop(): string | undefined {
-        let punctuation = this.punctuationQueue.pop();
+        const punctuation = this.punctuationQueue.pop();
         return punctuation;
     }
 

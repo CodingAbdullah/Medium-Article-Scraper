@@ -5,7 +5,7 @@ export default function generateArticleText(node: Node): string {
     let concatenatedText = '';
     
     // Iterate through the node and all of its children (starting with the root node - <article>)
-    for (var i = 0; i < node.childNodes.length; i++) {
+    for (let i = 0; i < node.childNodes.length; i++) {
       // If node within list is of type ELEMENT, call the function again and iterate through its children
       if (node.childNodes[i].nodeType === 1) {
         concatenatedText += generateArticleText(node.childNodes[i]) + ' ';

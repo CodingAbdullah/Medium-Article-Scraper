@@ -1,7 +1,7 @@
 import PunctuationQueue from "../dataTypes/PunctuationQueue";
 
 // Initialize an empty Queue for working with punctuation
-let punctuationQueue = new PunctuationQueue();
+const punctuationQueue = new PunctuationQueue();
 
 export default function insertPunctuation(articleText: string): string {
     // Populate Punctuation Queue for insertion later
@@ -13,12 +13,12 @@ export default function insertPunctuation(articleText: string): string {
 
     // Now, further format the article text, create an array of sentences with Punctuation ending
     // Add the relevant Punctuation using the Punctuation Queue from above
-    let articleSentencesArray = articleText.split(/[.?!]/g);
+    const articleSentencesArray = articleText.split(/[.?!]/g);
     let FINAL_FORMATTED_ARTICLE_TEXT = '';
     
     // For each sentence, insert Punctuation using the Punctuation Queue
     for (let i = 0; i < articleSentencesArray.length; i++){
-        let latestPunctuation = punctuationQueue.pop() || '';
+        const latestPunctuation = punctuationQueue.pop() || '';
         // If not defined, continue to next sentence
         if (latestPunctuation === ''){
             continue;

@@ -13,7 +13,7 @@ export const verifyArticleLink = async (req: Request, res: Response, next: NextF
         return res.status(400).json({ error: 'Invalid Medium article URL' }); // Return error response
     }
 
-    let parser = new DOMParser(); // Initiate parser
+    const parser = new DOMParser(); // Initiate parser
 
     // Set your options for making API request
     const options = {
