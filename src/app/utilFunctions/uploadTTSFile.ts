@@ -42,7 +42,6 @@ export async function uploadTTSFile(documentText: string, audioFileID: string): 
 
             // Poll for the task status
             let taskStatus;
-            let outputKey: string | null = null; // Variable to hold the output key
 
             do {
                 await new Promise(resolve => setTimeout(resolve, 5000)); // Wait for 5 seconds before polling again
