@@ -1,16 +1,6 @@
 // src/app/utilFunctions/uploadTTSFile.ts
 import { PollyClient, StartSpeechSynthesisTaskCommand, GetSpeechSynthesisTaskCommand } from '@aws-sdk/client-polly';
 import { PollyVoice } from '../dataTypes/PollyVoiceType';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-
-// Create an S3 client
-const s3Client = new S3Client({
-    region: process.env.REGION,
-    credentials: {
-        accessKeyId: process.env.ACCESS_ID!,
-        secretAccessKey: process.env.SECRET_KEY!
-    }
-});
 
 // Create a Polly client
 const pollyClient = new PollyClient({
@@ -67,7 +57,7 @@ export async function uploadTTSFile(documentText: string, audioFileID: string): 
                         const urlParts = new URL(outputUri);
                         outputKey = urlParts.pathname.split('/').pop() || null; // Get the last part of the path (the key)
                     }
-                    
+
                     return [true, outputKey || audioFileID]; // Return success with the S3 key
                 } 
                 else if (taskStatus === 'failed') {
