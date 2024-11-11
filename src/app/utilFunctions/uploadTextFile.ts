@@ -8,7 +8,7 @@ const s3Client = new S3Client({
     credentials: {
         accessKeyId: process.env.ACCESS_ID!,
         secretAccessKey: process.env.SECRET_KEY!
-    },
+    }
 });
 
 // Define a type for the return value of the uploadTextFile function

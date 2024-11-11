@@ -17,8 +17,8 @@ const pollyClient = new PollyClient({
     region: process.env.REGION,
     credentials: {
         accessKeyId: process.env.ACCESS_ID!,
-        secretAccessKey: process.env.SECRET_KEY!,
-    },
+        secretAccessKey: process.env.SECRET_KEY!
+    }
 });
 
 // Define a type for the return value of the uploadTTSFile function
@@ -38,7 +38,7 @@ export async function uploadTTSFile(documentText: string, audioFileID: string): 
                 TextType: 'text' as const,
                 VoiceId: PollyVoice.MATTHEW,
                 OutputS3BucketName: process.env.S3_BUCKET_NAME!, // Specify the S3 bucket for output
-                OutputS3KeyPrefix: ``, // Prefix for the output file
+                OutputS3KeyPrefix: `` // Prefix for the output file
             };
 
             // Start the speech synthesis task

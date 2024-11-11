@@ -6,8 +6,8 @@ const s3Client = new S3Client({
     region: process.env.REGION,
     credentials: {
         accessKeyId: process.env.ACCESS_ID!,
-        secretAccessKey: process.env.SECRET_KEY!,
-    },
+        secretAccessKey: process.env.SECRET_KEY!
+    }
 });
 
 // Fire Crawl Data function

@@ -8,7 +8,7 @@ const comprehendClient = new ComprehendClient({
     credentials: {
         accessKeyId: process.env.ACCESS_ID!,
         secretAccessKey: process.env.SECRET_KEY!
-    },
+    }
 });
 
 const s3Client = new S3Client({
@@ -16,7 +16,7 @@ const s3Client = new S3Client({
     credentials: {
         accessKeyId: process.env.ACCESS_ID!,
         secretAccessKey: process.env.SECRET_KEY!
-    },
+    }
 });
 
 // Creating an insights file
