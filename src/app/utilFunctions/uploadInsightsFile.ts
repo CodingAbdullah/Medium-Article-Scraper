@@ -21,7 +21,6 @@ const s3Client = new S3Client({
 
 // Creating an insights file
 export async function uploadInsightsFile(articleText: string, fileID: string): Promise<boolean> {
-    console.log('we are at Insights File');
     try {
         // Run analyses in parallel for better performance
         const [keyPhrasesResponse, entitiesResponse, languageResponse] = await Promise.all([

@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
 
         // Construct URLs
         uploadURL.textURL = constructS3Url(`Medium-Article-${textFileUploadStatus[1]}`, 'txt');
-        uploadURL.audioURL = audioFileUploadStatus ? constructS3Url(`audio-${audioFileUploadStatus[1]}`, 'mp3') : '';
+        uploadURL.audioURL = audioFileUploadStatus ? `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.REGION}.amazonaws.com/${audioFileUploadStatus[1]}` : ''
         uploadURL.insightsURL = insightsFileUploadStatus ? constructS3Url(`insights-${textFileUploadStatus[1]}`, 'txt') : '';
         uploadURL.fireCrawlURL = uploadFireCrawlInfoStatus ? constructS3Url(`firecrawl-${textFileUploadStatus[1]}`, 'json') : '';
 

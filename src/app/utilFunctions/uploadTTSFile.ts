@@ -8,8 +8,8 @@ const s3Client = new S3Client({
     region: process.env.REGION,
     credentials: {
         accessKeyId: process.env.ACCESS_ID!,
-        secretAccessKey: process.env.SECRET_KEY!,
-    },
+        secretAccessKey: process.env.SECRET_KEY!
+    }
 });
 
 // Create a Polly client
@@ -38,7 +38,7 @@ export async function uploadTTSFile(documentText: string, audioFileID: string): 
                 TextType: 'text' as const,
                 VoiceId: PollyVoice.MATTHEW,
                 OutputS3BucketName: process.env.S3_BUCKET_NAME!, // Specify the S3 bucket for output
-                OutputS3KeyPrefix: `` // Prefix for the output file
+                OutputS3KeyPrefix: `audio-${audioFileID}` // Set the S3 key prefix
             };
 
             // Start the speech synthesis task
@@ -52,6 +52,8 @@ export async function uploadTTSFile(documentText: string, audioFileID: string): 
 
             // Poll for the task status
             let taskStatus;
+            let outputKey: string | null = null; // Variable to hold the output key
+
             do {
                 await new Promise(resolve => setTimeout(resolve, 5000)); // Wait for 5 seconds before polling again
                 const getTaskCommand = new GetSpeechSynthesisTaskCommand({ TaskId: taskId });
@@ -59,17 +61,14 @@ export async function uploadTTSFile(documentText: string, audioFileID: string): 
                 taskStatus = taskResult.SynthesisTask?.TaskStatus;
 
                 if (taskStatus === 'completed') {
-                    // Upload the audio file to S3 with Content-Disposition
-                    const command = new PutObjectCommand({
-                        Bucket: process.env.S3_BUCKET_NAME!,
-                        Key: `audio-${audioFileID}.mp3`,
-                        Body: taskResult.SynthesisTask?.OutputUri, // Assuming you have the audio data here
-                        ContentType: 'audio/mpeg', // Set the content type
-                        ContentDisposition: `attachment; filename="audio-${audioFileID}.mp3"` // Set Content-Disposition
-                    });
-
-                    await s3Client.send(command); // Upload the audio file to S3
-                    return [true, audioFileID]; // Return success
+                    // Extract the output key from the OutputUri
+                    const outputUri = taskResult.SynthesisTask?.OutputUri;
+                    if (outputUri) {
+                        const urlParts = new URL(outputUri);
+                        outputKey = urlParts.pathname.split('/').pop() || null; // Get the last part of the path (the key)
+                    }
+                    
+                    return [true, outputKey || audioFileID]; // Return success with the S3 key
                 } 
                 else if (taskStatus === 'failed') {
                     throw new Error('Speech synthesis task failed');
