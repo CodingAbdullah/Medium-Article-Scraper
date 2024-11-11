@@ -1,20 +1,11 @@
 {
     "version": 2,
     "functions": {
-        "pages/api/**/*.js": {
+        "src/app/api/**/*.ts": {
+            "maxDuration": 60
+        },
+        "src/app/api/**/*.tsx": {
             "maxDuration": 60
         }
-    },
-    "builds": [
-        {
-            "src": "next.config.js",
-            "use": "@vercel/next"
-        }
-    ],
-    "routes": [
-        {
-            "src": "/api/(.*)",
-            "dest": "/pages/api/$1"
-        }
-    ]
+    }
 }
