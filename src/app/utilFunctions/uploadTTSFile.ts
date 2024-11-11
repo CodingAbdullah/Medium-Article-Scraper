@@ -58,7 +58,7 @@ export async function uploadTTSFile(documentText: string, audioFileID: string): 
                         outputKey = urlParts.pathname.split('/').pop() || null; // Get the last part of the path (the key)
                     }
 
-                    return [true, outputKey || audioFileID]; // Return success with the S3 key
+                    return [true, outputKey]; // Return success with the S3 key
                 } 
                 else if (taskStatus === 'failed') {
                     throw new Error('Speech synthesis task failed');
